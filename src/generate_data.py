@@ -1,3 +1,8 @@
+from src.data_model import dataclass 
+from src.data_model import random
+from src.data_model import Buku 
+from src.data_model import KATEGORI
+
 def generate_data(n=80):
     kata = ['Algoritma','Jaringan','Python','Data','Digital',
             'Sistem','Kontrol','Sinyal','Elektronika','Fisika']
