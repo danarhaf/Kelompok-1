@@ -3,3 +3,7 @@ class BSTNode:
         self.buku = buku
         self.left = None
         self.right = None
+        
+class BSTKatalog:
+    def _init_(self):
+        self.root = None
