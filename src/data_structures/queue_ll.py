@@ -4,12 +4,11 @@ class LLNode:
         self.next = None
         
 class Queue:
-    
     def _init_(self):
         self.head = None
         self.tail = None
         self._size = 0
-        
+
     def enqueue(self, data):
         node = LLNode(data)
         if not self.tail:
@@ -28,6 +27,9 @@ class Queue:
             self.tail = None
         self._size -= 1
         return data
+    
+    def is_empty(self):
+        return self._size == 0
 
-def _len_(self):
+    def _len_(self):
         return self._size
