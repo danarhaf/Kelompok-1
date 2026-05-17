@@ -11,3 +11,8 @@ class GraphRekBuku:
 
         self.adj[a][b] = self.adj[a].get(b, 0) + 1
         self.adj[b][a] = self.adj[b].get(a, 0) + 1
+        
+    def rekomendasikan(self, isbn, max_hop=2):
+        visited = set([isbn])
+        queue = [(isbn, 0)]
+        hasil = set()
