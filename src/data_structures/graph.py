@@ -16,3 +16,16 @@ class GraphRekBuku:
         visited = set([isbn])
         queue = [(isbn, 0)]
         hasil = set()
+        
+        while queue:
+            current, depth = queue.pop(0)
+            if depth >= max_hop:
+                continue
+
+            for tetangga in self.adj.get(current, {}):
+                if tetangga not in visited:
+                    visited.add(tetangga)
+                    hasil.add(tetangga)
+                    queue.append((tetangga, depth+1))
+
+        return list(hasil)
