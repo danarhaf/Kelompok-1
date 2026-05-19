@@ -61,3 +61,31 @@ class BSTKatalog:
         # ISBN sama -> update data buku yang sudah ada (tidak duplikat)
         else:
             node.buku = buku
+            
+            
+# ----------------------------------------------------------
+# search — cari buku berdasarkan ISBN
+# Big-O Waktu : O(log n) rata-rata | O(n) worst-case
+# Big-O Ruang : O(log n) call stack rekursif
+# Mengembalikan objek Buku jika ditemukan, atau None
+# ----------------------------------------------------------
+
+    def search(self, isbn):
+        return self._search_rekursif(self._root, isbn)
+    
+    def _search_rekursif(self, node, isbn):
+        
+        # basis: node kosong berarti tidak ditemukan
+        if node is None:
+            return None
+        
+        # basis: ISBN cocok
+        if isbn == node.buku.isbn:
+            return node.buku
+        
+        # rekursif ke kiri jika ISBN yang dicari lebih kecil
+        if isbn < node.buku.isbn:
+            return self._search_rekursif(node.kiri, isbn)
+        
+        # rekursif ke kanan jika ISBN lebih besar
+        return self._search_rekursif(node.kanan, isbn)
