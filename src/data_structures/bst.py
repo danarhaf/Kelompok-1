@@ -61,8 +61,8 @@ class BSTKatalog:
         # ISBN sama -> update data buku yang sudah ada (tidak duplikat)
         else:
             node.buku = buku
-            
-            
+
+
 # ----------------------------------------------------------
 # search — cari buku berdasarkan ISBN
 # Big-O Waktu : O(log n) rata-rata | O(n) worst-case
@@ -89,7 +89,7 @@ class BSTKatalog:
         
         # rekursif ke kanan jika ISBN lebih besar
         return self._search_rekursif(node.kanan, isbn)
-    
+
 # ----------------------------------------------------------
 # update_status — ubah status buku (TERSEDIA/DIPINJAM/DIPESAN)
 # Big-O Waktu : O(log n) rata-rata — cari dulu baru update
@@ -103,3 +103,21 @@ class BSTKatalog:
             return False
         buku.status = status_baru
         return True
+
+# ----------------------------------------------------------
+# inorder — traversal inorder menghasilkan buku terurut ISBN
+# Big-O Waktu : O(n) — setiap node dikunjungi tepat satu kali
+# Big-O Ruang : O(n) — list hasil + O(log n) call stack
+# ----------------------------------------------------------
+
+    def inorder(self):
+        hasil = []
+        self._inorder_rekursif(self._root, hasil)
+        return hasil   # list Buku terurut menaik berdasarkan ISBN
+
+    def _inorder_rekursif(self, node, hasil):
+        if node is None:
+            return
+        self._inorder_rekursif(node.kiri, hasil)    # kunjungi kiri dulu
+        hasil.append(node.buku)                      # catat node saat ini
+        self._inorder_rekursif(node.kanan, hasil)   # kunjungi kanan
