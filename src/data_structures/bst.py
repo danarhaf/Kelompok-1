@@ -121,3 +121,65 @@ class BSTKatalog:
         self._inorder_rekursif(node.kiri, hasil)    # kunjungi kiri dulu
         hasil.append(node.buku)                      # catat node saat ini
         self._inorder_rekursif(node.kanan, hasil)   # kunjungi kanan
+
+
+# ----------------------------------------------------------
+# delete — hapus buku dari BST (misal buku rusak/hilang)
+# Big-O Waktu : O(log n) rata-rata | O(n) worst-case
+# Big-O Ruang : O(log n) call stack
+# Mengembalikan True jika berhasil, False jika tidak ditemukan
+# ----------------------------------------------------------
+
+    def delete(self, isbn):
+        root_baru, berhasil = self._delete_rekursif(self._root, isbn)
+        if berhasil:
+            self._root = root_baru
+            self._jumlah -= 1
+        return berhasil
+
+    def _delete_rekursif(self, node, isbn):
+        """
+        Kembalikan (node_baru, berhasil).
+        Tiga kasus penghapusan:
+        1. Node adalah daun (tidak punya anak)    -> langsung hapus
+        2. Node punya satu anak                   -> ganti dengan anak
+        3. Node punya dua anak                    -> ganti dengan successor
+            (node terkecil di subtree kanan = inorder successor)
+        """
+        if node is None:
+            return None, False   # ISBN tidak ditemukan
+
+        berhasil = False
+
+        if isbn < node.buku.isbn:
+            node.kiri, berhasil = self._delete_rekursif(node.kiri, isbn)
+        elif isbn > node.buku.isbn:
+            node.kanan, berhasil = self._delete_rekursif(node.kanan, isbn)
+        else:
+            # node yang akan dihapus ditemukan
+            berhasil = True
+
+            # Kasus 1 & 2: tidak punya anak atau hanya satu anak
+            if node.kiri is None:
+                return node.kanan, berhasil
+            if node.kanan is None:
+                return node.kiri, berhasil
+
+            # Kasus 3: punya dua anak
+            # cari inorder successor (node paling kiri di subtree kanan)
+            successor = self._cari_minimum(node.kanan)
+            # salin data successor ke node ini
+            node.buku = successor.buku
+            # hapus successor dari subtree kanan
+            node.kanan, _ = self._delete_rekursif(node.kanan, successor.buku.isbn)
+
+        return node, berhasil
+
+    def _cari_minimum(self, node):
+        """
+        Cari node dengan ISBN terkecil di subtree yang di-root oleh node.
+        Big-O Waktu : O(h) — h = tinggi subtree
+        """
+        while node.kiri is not None:
+            node = node.kiri
+        return node
