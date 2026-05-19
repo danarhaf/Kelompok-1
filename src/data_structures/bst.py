@@ -183,3 +183,24 @@ class BSTKatalog:
         while node.kiri is not None:
             node = node.kiri
         return node
+
+# ----------------------------------------------------------
+# hitung_tinggi — ukur tinggi pohon (untuk analisis Big-O)
+# Big-O Waktu : O(n) — traversal seluruh pohon
+# ----------------------------------------------------------
+
+    def hitung_tinggi(self):
+        return self._tinggi_rekursif(self._root)
+
+    def _tinggi_rekursif(self, node):
+        if node is None:
+            return 0
+        tinggi_kiri = self._tinggi_rekursif(node.kiri)
+        tinggi_kanan = self._tinggi_rekursif(node.kanan)
+        return 1 + max(tinggi_kiri, tinggi_kanan)
+
+    def __len__(self):
+        return self._jumlah
+
+    def __repr__(self):
+        return f"BSTKatalog(jumlah_buku={self._jumlah}, tinggi={self.hitung_tinggi()})"
