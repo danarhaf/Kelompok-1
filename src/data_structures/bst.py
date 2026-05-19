@@ -89,3 +89,17 @@ class BSTKatalog:
         
         # rekursif ke kanan jika ISBN lebih besar
         return self._search_rekursif(node.kanan, isbn)
+    
+# ----------------------------------------------------------
+# update_status — ubah status buku (TERSEDIA/DIPINJAM/DIPESAN)
+# Big-O Waktu : O(log n) rata-rata — cari dulu baru update
+# Big-O Ruang : O(log n) call stack
+# Mengembalikan True jika berhasil, False jika ISBN tidak ada
+# ----------------------------------------------------------
+
+    def update_status(self, isbn, status_baru):
+        buku = self.search(isbn)
+        if buku is None:
+            return False
+        buku.status = status_baru
+        return True
