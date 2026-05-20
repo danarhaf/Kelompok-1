@@ -168,3 +168,50 @@ def test_push_objek_dict_sebagai_transaksi():
     assert s.peek()['tx_id'] == 5   # yang terakhir push ada di atas
 
 
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 6 — pindah_ke_linked_list (archiving)
+# ══════════════════════════════════════════════════════════════
+
+def test_archiving_tidak_terjadi_jika_belum_melebihi_batas():
+    s = buat_stack(1, 2, 3)
+    arsip = s.pindah_ke_linked_list(maks_simpan=10)
+    # belum perlu arsip karena size <= maks_simpan
+    assert arsip == []
+    assert len(s) == 3
+
+
+def test_archiving_memindah_elemen_lama():
+    """
+    Stack isi 10 elemen, maks_simpan=5.
+    5 elemen terlama (terbawah) harus dipindah ke arsip.
+    Stack menyisakan 5 elemen teratas.
+    Relevan untuk Pertanyaan Analisis no. 4.
+    """
+    s = Stack()
+    for i in range(1, 11):   # push 1..10, top = 10
+        s.push(i)
+
+    arsip = s.pindah_ke_linked_list(maks_simpan=5)
+
+    # stack menyisakan 5 elemen teratas: 10, 9, 8, 7, 6
+    assert len(s) == 5
+    assert s.peek() == 10
+
+    # arsip berisi 5 elemen terbawah: 5, 4, 3, 2, 1 (urutan atas->bawah)
+    assert len(arsip) == 5
+    assert arsip[0] == 5   # elemen terlama yang dipindah pertama
+
+
+def test_archiving_stack_tetap_berfungsi_normal_setelahnya():
+    s = Stack()
+    for i in range(1, 11):
+        s.push(i)
+    s.pindah_ke_linked_list(maks_simpan=5)
+
+    # setelah archiving, push/pop harus tetap normal
+    s.push(99)
+    assert s.peek() == 99
+    assert len(s) == 6
+    assert s.pop() == 99
+
+
