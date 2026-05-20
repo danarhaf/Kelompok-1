@@ -185,3 +185,89 @@ class CLI:
         # update sesi rekomendasi jika berhasil
         if hasil['berhasil'] and nim_peminjam:
             self._rekomendasi.catat_kembalikan(nim_peminjam, isbn)
+
+
+    # ----------------------------------------------------------
+    # PESAN <nim> <isbn>
+    # Big-O: O(1) enqueue (+ O(k) cek duplikat)
+    # ----------------------------------------------------------
+    def _handle_pesan(self, token):
+        if len(token) < 3:
+            print('[ERROR] Penggunaan: PESAN <nim> <isbn>')
+            return
+        nim  = token[1].upper()
+        isbn = token[2].upper()
+
+        # pastikan buku memang sedang dipinjam
+        cari = self._katalog.cari_buku(isbn)
+        if not cari['berhasil']:
+            print(cari['pesan'])
+            return
+        if cari['status'] == 'TERSEDIA':
+            print(f'[PESAN] Buku {isbn} sedang TERSEDIA. Langsung gunakan PINJAM.')
+            return
+
+        hasil = self._antrian.pesan(isbn, nim)
+        print(hasil['pesan'])
+        print(f'  Big-O: {hasil["big_o"]}')
+
+        # catat ke stack riwayat
+        if hasil['berhasil']:
+            self._riwayat.catat('PESAN', nim, isbn)
+
+    # ----------------------------------------------------------
+    # BATALKAN_PESAN <nim> <isbn>
+    # Big-O: O(k) rebuild antrian
+    # ----------------------------------------------------------
+    def _handle_batalkan_pesan(self, token):
+        if len(token) < 3:
+            print('[ERROR] Penggunaan: BATALKAN_PESAN <nim> <isbn>')
+            return
+        nim  = token[1].upper()
+        isbn = token[2].upper()
+
+        hasil = self._antrian.batalkan_pesan(isbn, nim)
+        print(hasil['pesan'])
+        print(f'  Big-O: {hasil["big_o"]}')
+
+        if hasil['berhasil']:
+            self._riwayat.catat('BATAL_PESAN', nim, isbn)
+
+    # ----------------------------------------------------------
+    # BATALKAN_TERAKHIR
+    # Big-O: O(1) stack pop + O(log n) BST update status
+    # ----------------------------------------------------------
+    def _handle_batalkan_terakhir(self, token):
+        tx = self._riwayat.batalkan_terakhir()   # O(1)
+
+        if tx is None:
+            print('[UNDO] Tidak ada transaksi yang bisa dibatalkan.')
+            return
+
+        aksi = tx.get('aksi', '')
+        isbn = tx.get('isbn', '')
+        nim  = tx.get('nim', '')
+
+        print(f'[UNDO] Membatalkan: {ManajerRiwayat.format_tampil(tx)}')
+
+        # balik efek berdasarkan jenis aksi
+        if aksi == 'PINJAM':
+            # buku kembali ke TERSEDIA
+            ok = self._katalog.undo_pinjam(isbn)
+            if ok:
+                self._rekomendasi.catat_kembalikan(nim, isbn)
+                print(f'[UNDO] Status {isbn} dikembalikan ke TERSEDIA.')
+
+        elif aksi == 'KEMBALIKAN':
+            # buku kembali ke DIPINJAM
+            ok = self._katalog.undo_kembalikan(isbn)
+            if ok:
+                print(f'[UNDO] Status {isbn} dikembalikan ke DIPINJAM.')
+
+        elif aksi == 'PESAN':
+            # hapus nim dari antrian isbn
+            self._antrian.batalkan_pesan(isbn, nim)
+            print(f'[UNDO] Pesanan {nim} untuk {isbn} dihapus dari antrian.')
+
+        print(f'  Big-O: O(1) stack pop + O(log n) BST update')
+
