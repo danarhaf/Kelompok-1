@@ -143,3 +143,23 @@ class CLI:
         hasil = self._katalog.cari_buku(isbn)
         print(hasil['pesan'])
         print(f'  Big-O: {hasil["big_o"]}')
+        
+
+    # ----------------------------------------------------------
+    # PINJAM <nim> <isbn>
+    # Big-O: O(log n) BST search + update, O(1) stack push
+    # ----------------------------------------------------------
+    def _handle_pinjam(self, token):
+        if len(token) < 3:
+            print('[ERROR] Penggunaan: PINJAM <nim> <isbn>')
+            return
+        nim  = token[1].upper()
+        isbn = token[2].upper()
+
+        hasil = self._katalog.pinjam(isbn, nim, self._riwayat)
+        print(hasil['pesan'])
+        print(f'  Big-O: {hasil["big_o"]}')
+
+        # catat ke graf rekomendasi jika berhasil
+        if hasil['berhasil']:
+            self._rekomendasi.catat_pinjam(nim, isbn)
