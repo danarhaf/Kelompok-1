@@ -101,3 +101,13 @@ def test_self_loop_diabaikan():
     g = GraphRekBuku()
     g.add_copinjam('ISBN-0001', 'ISBN-0001')
     assert g.info_graf()['edge'] == 0
+
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 3 — rekomendasikan (BFS)
+# ══════════════════════════════════════════════════════════════
+
+def test_rekomendasi_hop1_langsung():
+    """
+    ISBN-0001 terhubung langsung ke ISBN-0002 dan ISBN-0003.
+    Dengan max_hop=1 hanya tetangga langsung yang muncul.
+    """
