@@ -43,4 +43,8 @@ class GraphRekBuku:
             return   # tidak perlu self-loop
 
         self.tambah_vertex(isbn_a)
-        self.tambah_vertex(isbn_b)
+        self.tambah_vertex(isbn_b)  
+        # cek apakah edge sudah ada, jika ya naikkan bobotnya
+        # graf tidak berarah: update kedua sisi
+        self._adj[isbn_a] = self._update_bobot(self._adj[isbn_a], isbn_b)
+        self._adj[isbn_b] = self._update_bobot(self._adj[isbn_b], isbn_a)
