@@ -40,3 +40,13 @@ def bst_dengan(*isbn_list):
     return pohon
 
 
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 1 — kondisi awal
+# ══════════════════════════════════════════════════════════════
+
+def test_bst_baru_kosong():
+    pohon = BSTKatalog()
+    assert len(pohon) == 0
+    assert pohon.search('ISBN-0001') is None
+    assert pohon.inorder() == []
+
