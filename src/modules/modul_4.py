@@ -92,3 +92,11 @@ class ManajerRekomendasi:
         """
         if nim in self._sesi_aktif and isbn in self._sesi_aktif[nim]:
             self._sesi_aktif[nim].remove(isbn)   # O(k)
+                # ----------------------------------------------------------
+    # rekomendasikan — BFS dari isbn, max 2 hop
+    # Big-O Waktu : O(V + E)
+    # ----------------------------------------------------------
+    def rekomendasikan(self, isbn: str,
+                       max_hop: int = 2,
+                       min_bobot: int = 1,
+                       manajer_katalog=None) -> dict:
