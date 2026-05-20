@@ -60,3 +60,12 @@ class ManajerAntrian:
         # pastikan slot ada meski isbn belum terdaftar
         if isbn not in self._antrian:
             self._antrian[isbn] = Queue()
+    
+        # cek apakah nim sudah ada di antrian (hindari duplikat)
+        # Big-O cek duplikat: O(k) — k = panjang antrian buku ini
+        if self._sudah_antri(isbn, nim):
+            return {
+                'berhasil': False,
+                'pesan'   : f'[ANTRIAN] {nim} sudah ada di antrian {isbn}.',
+                'big_o'   : 'O(k) cek duplikat, k=panjang antrian',
+            }
