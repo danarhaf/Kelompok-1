@@ -306,3 +306,64 @@ class CLI:
             for i, nim in enumerate(info['antrian'], 1):
                 print(f'  {i}. {nim}')
         print(f'  Big-O: {info["big_o"]}')
+
+
+    # ----------------------------------------------------------
+    # KATALOG
+    # Big-O: O(n) inorder BST
+    # ----------------------------------------------------------
+    def _handle_katalog(self, token):
+        from modul_3 import LABEL_STATUS
+        daftar = self._katalog.katalog_semua()   # O(n)
+        print(f'\n[KATALOG] Total {len(daftar)} buku (urutan ISBN):')
+        print(f"{'No':>4} {'ISBN':<12} {'Judul':<30} {'Pengarang':<18} "
+            f"{'Kategori':<10} {'Status'}")
+        print('-' * 85)
+        for i, b in enumerate(daftar, 1):
+            label = LABEL_STATUS.get(b.status, '?')
+            print(f"{i:>4} {b.isbn:<12} {b.judul[:28]:<30} "
+                f"{b.pengarang:<18} {b.kategori:<10} {label}")
+        print(f'\n  Big-O: O(n) inorder BST traversal')
+
+    # ----------------------------------------------------------
+    # LAPORAN_BULAN
+    # Big-O: Shell Sort ~O(n^1.5), Merge Sort O(n log n)
+    # ----------------------------------------------------------
+    def _handle_laporan_bulan(self, token):
+        riwayat = self._riwayat.riwayat_semua()   # O(n)
+
+        # Shell Sort — durasi descending
+        laporan_durasi = self._laporan.buat_laporan_durasi(riwayat)
+        print('\n[LAPORAN] Peminjaman Berdasarkan Durasi (Shell Sort, descending):')
+        print(f"{'No':>4} {'TX-ID':<8} {'NIM':<12} {'ISBN':<12} {'Durasi (hari)'}")
+        print('-' * 55)
+        for i, tx in enumerate(laporan_durasi[:10], 1):   # tampil 10 teratas
+            print(f"{i:>4} TX-{tx['tx_id']:04d}   {tx['nim']:<12} "
+                f"{tx['isbn']:<12} {tx['durasi']}")
+        print(f'  Big-O Shell Sort: ~O(n^1.5)')
+
+        # Merge Sort — frekuensi descending
+        laporan_freq = self._laporan.buat_laporan_frekuensi(riwayat)
+        print('\n[LAPORAN] Frekuensi Peminjaman per Judul (Merge Sort, descending):')
+        print(f"{'No':>4} {'ISBN':<12} {'Frekuensi'}")
+        print('-' * 30)
+        for i, item in enumerate(laporan_freq[:10], 1):
+            print(f"{i:>4} {item['isbn']:<12} {item['frekuensi']}")
+        print(f'  Big-O Merge Sort: O(n log n)')
+
+        # tabel benchmark runtime
+        bench = self._laporan.benchmark_sorting(riwayat)
+        print(ManajerLaporan.format_tabel_runtime(bench))
+
+    # ── helper internal ───────────────────────────────────────
+
+    def _cari_peminjam_aktif(self, isbn: str) -> str | None:
+        """
+        Cari NIM peminjam aktif suatu ISBN dari riwayat stack.
+        Ambil transaksi PINJAM terbaru untuk isbn yang belum di-undo.
+        Big-O: O(n) traversal riwayat
+        """
+        for tx in self._riwayat.riwayat_semua():
+            if tx.get('isbn') == isbn and tx.get('aksi') == 'PINJAM':
+                return tx.get('nim')
+        return None
