@@ -100,3 +100,28 @@ def test_peek_selalu_menunjuk_top():
     assert s.peek() == 2
     s.pop()
     assert s.peek() == 1
+
+
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 4 — tampilkan_stack
+# ══════════════════════════════════════════════════════════════
+
+def test_tampilkan_stack_urutan_atas_ke_bawah():
+    # tampilkan_stack harus mengembalikan dari top ke bottom
+    s = buat_stack('A', 'B', 'C')
+    assert s.tampilkan_stack() == ['C', 'B', 'A']
+
+
+def test_tampilkan_stack_kosong_kembalikan_list_kosong():
+    s = Stack()
+    assert s.tampilkan_stack() == []
+
+
+def test_tampilkan_stack_tidak_mengubah_isi():
+    s = buat_stack(10, 20, 30)
+    s.tampilkan_stack()
+    # setelah dipanggil, isi stack tidak boleh berubah
+    assert len(s) == 3
+    assert s.peek() == 30
+
+
