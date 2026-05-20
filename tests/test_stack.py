@@ -40,3 +40,43 @@ def test_pop_dari_stack_kosong_kembalikan_none():
 def test_peek_stack_kosong_kembalikan_none():
     s = Stack()
     assert s.peek() is None
+
+
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 2 — operasi dasar push & pop
+# ══════════════════════════════════════════════════════════════
+
+def test_satu_push_lalu_pop():
+    s = Stack()
+    s.push('TX-001')
+    assert s.pop() == 'TX-001'
+
+
+def test_urutan_lifo_terjaga():
+    # Yang terakhir masuk harus pertama keluar
+    # push: A, B, C  ->  pop harus: C, B, A
+    s = buat_stack('A', 'B', 'C')
+    assert s.pop() == 'C'
+    assert s.pop() == 'B'
+    assert s.pop() == 'A'
+
+
+def test_size_naik_setiap_push():
+    s = Stack()
+    for i in range(1, 6):
+        s.push(i)
+        assert len(s) == i
+
+
+def test_size_turun_setiap_pop():
+    s = buat_stack(10, 20, 30)
+    for sisa in [2, 1, 0]:
+        s.pop()
+        assert len(s) == sisa
+
+
+def test_stack_kosong_setelah_semua_dipop():
+    s = buat_stack('x', 'y', 'z')
+    s.pop(); s.pop(); s.pop()
+    assert s.is_empty() is True
+    assert len(s) == 0    
