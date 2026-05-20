@@ -74,3 +74,28 @@ def test_insert_isbn_duplikat_update_bukan_tambah():
     assert len(pohon) == 1             # tetap satu node
     assert pohon.search('ISBN-0010').judul == 'Versi Baru'   # data terupdate
 
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 3 — search
+# ══════════════════════════════════════════════════════════════
+
+def test_search_isbn_yang_ada():
+    pohon = bst_dengan('ISBN-0010', 'ISBN-0005', 'ISBN-0015')
+    hasil = pohon.search('ISBN-0005')
+    assert hasil is not None
+    assert hasil.isbn == 'ISBN-0005'
+
+
+def test_search_isbn_tidak_ada_kembalikan_none():
+    pohon = bst_dengan('ISBN-0010', 'ISBN-0020')
+    assert pohon.search('ISBN-0099') is None
+
+
+def test_search_di_bst_kosong():
+    pohon = BSTKatalog()
+    assert pohon.search('ISBN-0001') is None
+
+
+def test_search_root_langsung():
+    pohon = bst_dengan('ISBN-0040')
+    assert pohon.search('ISBN-0040').isbn == 'ISBN-0040'
+    
