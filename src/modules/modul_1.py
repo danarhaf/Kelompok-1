@@ -98,3 +98,22 @@ class ManajerAntrian:
                 'pesan'   : f'[ANTRIAN] Tidak ada antrian untuk {isbn}.',
                 'big_o'   : 'O(1)',
             }
+
+        # ambil semua anggota antrian ke list sementara
+        # Big-O: O(k)
+        semua = self._antrian[isbn].tampilkan_antrian()
+
+        if nim not in semua:
+            return {
+                'berhasil': False,
+                'pesan'   : f'[ANTRIAN] {nim} tidak ditemukan di antrian {isbn}.',
+                'big_o'   : 'O(k) traversal',
+            }
+
+        # rebuild queue tanpa nim yang dibatalkan
+        queue_baru = Queue()
+        for anggota in semua:
+            if anggota != nim:
+                queue_baru.enqueue(anggota)   # O(1) per enqueue
+
+        self._antrian[isbn] = queue_baru
