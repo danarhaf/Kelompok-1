@@ -82,3 +82,16 @@ class ManajerRiwayat:
     # ----------------------------------------------------------
     def intip_terakhir(self) -> dict | None:
         return self._stack.peek()   # O(1)
+    
+    # ----------------------------------------------------------
+    # riwayat_semua — kembalikan semua transaksi (atas ke bawah)
+    # Dipakai modul_5 untuk sorting laporan bulanan.
+    # Big-O Waktu : O(n) — traversal seluruh stack
+    # Big-O Ruang : O(n)
+    # ----------------------------------------------------------
+    def riwayat_semua(self) -> list[dict]:
+        """
+        Kembalikan list semua transaksi dari terbaru ke terlama.
+        Tidak mengubah isi stack.
+        """
+        return self._stack.tampilkan_stack()   # O(n)
