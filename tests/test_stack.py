@@ -125,3 +125,46 @@ def test_tampilkan_stack_tidak_mengubah_isi():
     assert s.peek() == 30
 
 
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 5 — skenario undo transaksi perpustakaan
+# ══════════════════════════════════════════════════════════════
+
+def test_undo_transaksi_terakhir():
+    """
+    Simulasi fitur BATALKAN_TERAKHIR di CLI:
+    petugas salah input -> pop transaksi terbaru dari stack.
+    """
+    s = Stack()
+    tx1 = {'id': 1, 'aksi': 'PINJAM', 'isbn': 'ISBN-0001', 'nim': 'NIM-001'}
+    tx2 = {'id': 2, 'aksi': 'PINJAM', 'isbn': 'ISBN-0002', 'nim': 'NIM-002'}
+    s.push(tx1)
+    s.push(tx2)
+
+    # batalkan transaksi terakhir
+    dibatalkan = s.pop()
+    assert dibatalkan['id'] == 2
+    assert dibatalkan['aksi'] == 'PINJAM'
+
+    # stack sekarang hanya berisi tx1
+    assert len(s) == 1
+    assert s.peek()['id'] == 1
+
+
+def test_push_setelah_sempat_kosong():
+    # Stack boleh dipakai lagi setelah dikosongkan
+    s = buat_stack('TX-001')
+    s.pop()
+    s.push('TX-002')
+    assert s.peek() == 'TX-002'
+    assert len(s) == 1
+
+
+def test_push_objek_dict_sebagai_transaksi():
+    # Data transaksi berbentuk dict harus bisa masuk stack
+    s = Stack()
+    for i in range(1, 6):
+        s.push({'tx_id': i, 'isbn': f'ISBN-{i:04d}'})
+    assert len(s) == 5
+    assert s.peek()['tx_id'] == 5   # yang terakhir push ada di atas
+
+
