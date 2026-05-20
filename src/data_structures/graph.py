@@ -152,4 +152,13 @@ class GraphRekBuku:
             sum(len(v) for v in self._adj.values()) / total_vertex
             if total_vertex > 0 else 0
         )
-        return {
+        return {       
+                "vertex": total_vertex,
+            "edge": total_edge,
+            "derajat_rata_rata": round(derajat_rata, 2)
+        }
+
+    def __repr__(self):
+        info = self.info_graf()
+        return (f"GraphRekBuku(V={info['vertex']}, E={info['edge']}, "
+                f"deg_avg={info['derajat_rata_rata']})")
