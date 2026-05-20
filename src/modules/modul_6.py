@@ -130,3 +130,16 @@ class CLI:
 
     def _handle_bantuan(self, token):
         print(BANTUAN)
+
+    # ----------------------------------------------------------
+    # CARI_BUKU <isbn>
+    # Big-O: O(log n) BST search
+    # ----------------------------------------------------------
+    def _handle_cari_buku(self, token):
+        if len(token) < 2:
+            print('[ERROR] Penggunaan: CARI_BUKU <isbn>')
+            return
+        isbn = token[1].upper()
+        hasil = self._katalog.cari_buku(isbn)
+        print(hasil['pesan'])
+        print(f'  Big-O: {hasil["big_o"]}')
