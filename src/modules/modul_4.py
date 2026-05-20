@@ -81,3 +81,14 @@ class ManajerRekomendasi:
             self._graf.add_copinjam(isbn, isbn_lain)   # O(deg)
 
         self._sesi_aktif[nim].append(isbn)
+            # ----------------------------------------------------------
+    # catat_kembalikan — hapus isbn dari sesi aktif anggota
+    # Big-O Waktu : O(k) — k = buku aktif anggota
+    # ----------------------------------------------------------
+    def catat_kembalikan(self, nim: str, isbn: str):
+        """
+        Dipanggil setiap kali KEMBALIKAN berhasil.
+        Buku dikembalikan berarti keluar dari sesi aktif anggota.
+        """
+        if nim in self._sesi_aktif and isbn in self._sesi_aktif[nim]:
+            self._sesi_aktif[nim].remove(isbn)   # O(k)
