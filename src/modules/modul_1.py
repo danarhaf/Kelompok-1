@@ -117,3 +117,9 @@ class ManajerAntrian:
                 queue_baru.enqueue(anggota)   # O(1) per enqueue
 
         self._antrian[isbn] = queue_baru
+        
+        return {
+            'berhasil': True,
+            'pesan'   : f'[ANTRIAN] Pesanan {nim} untuk {isbn} berhasil dibatalkan.',
+            'big_o'   : 'O(k) rebuild antrian',
+        }
