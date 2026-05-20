@@ -252,3 +252,50 @@ def test_tinggi_pohon_seimbang_sekitar_log_n():
     pohon = bst_dengan(*urutan_acak)
     batas = math.ceil(math.log2(len(urutan_acak) + 1))
     assert pohon.hitung_tinggi() <= batas + 1   # toleransi 1 level
+    
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 8 — integrasi generate_koleksi (80 buku sistem penuh)
+# ══════════════════════════════════════════════════════════════
+
+def test_insert_80_buku_dari_generate_koleksi():
+    """
+    Pakai generate_koleksi() asli (seed=13) agar test ini
+    benar-benar mencerminkan kondisi sistem saat dijalankan.
+    Semua buku harus bisa ditemukan dan inorder terurut.
+    """
+    from generate_data import generate_koleksi   # <-- pakai generate_data asli
+
+    pohon = BSTKatalog()
+    koleksi = generate_koleksi(80)
+
+    for b in koleksi:
+        pohon.insert(b)
+
+    assert len(pohon) == 80
+
+    for b in koleksi:
+        assert pohon.search(b.isbn) is not None
+
+    isbn_urut = [b.isbn for b in pohon.inorder()]
+    assert isbn_urut == sorted(isbn_urut)
+
+
+def test_update_status_setelah_generate_koleksi():
+    """
+    Setelah insert dari generate_koleksi, update_status harus
+    bisa mengubah status buku menggunakan konstanta STATUS asli.
+    """
+    from generate_data import generate_koleksi
+
+    pohon = BSTKatalog()
+    for b in generate_koleksi(80):
+        pohon.insert(b)
+
+    # pinjam buku pertama
+    ok = pohon.update_status('ISBN-0001', STATUS['DIPINJAM'])
+    assert ok is True
+    assert pohon.search('ISBN-0001').status == STATUS['DIPINJAM']
+
+    # kembalikan
+    pohon.update_status('ISBN-0001', STATUS['TERSEDIA'])
+    assert pohon.search('ISBN-0001').status == STATUS['TERSEDIA']
