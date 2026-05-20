@@ -79,3 +79,22 @@ class ManajerAntrian:
                          f'Posisi ke-{posisi}.'),
             'big_o'   : 'enqueue O(1)',
         }
+
+    # ----------------------------------------------------------
+    # batalkan_pesan
+    # Anggota membatalkan pesanan — hapus nim dari antrian.
+    # Karena Queue tidak support random delete, kita rebuild.
+    # Big-O Waktu : O(k) — traversal seluruh antrian buku ini
+    # Big-O Ruang : O(k) — Queue sementara
+    # ----------------------------------------------------------
+    def batalkan_pesan(self, isbn: str, nim: str) -> dict:
+        """
+        Hapus nim dari antrian isbn.
+        Rebuild queue tanpa nim yang dibatalkan.
+        """
+        if isbn not in self._antrian or self._antrian[isbn].is_empty():
+            return {
+                'berhasil': False,
+                'pesan'   : f'[ANTRIAN] Tidak ada antrian untuk {isbn}.',
+                'big_o'   : 'O(1)',
+            }
