@@ -67,3 +67,45 @@ class ManajerKatalog:
             'pesan'   : self._format_buku(buku),
             'big_o'   : 'O(log n) BST search',
         }
+    # ----------------------------------------------------------
+    # pinjam — proses peminjaman buku oleh anggota
+    # Big-O Waktu : O(log n) search + O(log n) update = O(log n)
+    # ----------------------------------------------------------
+    def pinjam(self, isbn: str, nim: str,
+            manajer_riwayat, durasi: int = 14) -> dict:
+        """
+        Syarat: buku harus berstatus TERSEDIA.
+        Jika berhasil, status diubah ke DIPINJAM dan transaksi dicatat.
+        Jika sedang DIPINJAM/DIPESAN, sarankan pesan via modul_1.
+        """
+        buku = self._bst.search(isbn)   # O(log n)
+
+        if buku is None:
+            return {
+                'berhasil': False,
+                'pesan'   : f'[PINJAM] Buku {isbn} tidak ditemukan di katalog.',
+                'big_o'   : 'O(log n) BST search',
+            }
+
+        if buku.status != STATUS['TERSEDIA']:
+            label = LABEL_STATUS.get(buku.status, '?')
+            return {
+                'berhasil': False,
+                'pesan'   : (f'[PINJAM] Buku {isbn} sedang {label}. '
+                            f'Gunakan PESAN {nim} {isbn} untuk mengantri.'),
+                'big_o'   : 'O(log n) BST search',
+            }
+
+        # ubah status ke DIPINJAM
+        self._bst.update_status(isbn, STATUS['DIPINJAM'])   # O(log n)
+
+        # catat ke stack riwayat — O(1)
+        tx_id = manajer_riwayat.catat('PINJAM', nim, isbn, durasi)
+
+        return {
+            'berhasil': True,
+            'tx_id'   : tx_id,
+            'pesan'   : (f'[PINJAM] Berhasil. {nim} meminjam {isbn} '
+                        f'selama {durasi} hari. TX-{tx_id:04d}'),
+            'big_o'   : 'O(log n) BST search + update',
+        }
