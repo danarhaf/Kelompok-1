@@ -69,3 +69,13 @@ class ManajerAntrian:
                 'pesan'   : f'[ANTRIAN] {nim} sudah ada di antrian {isbn}.',
                 'big_o'   : 'O(k) cek duplikat, k=panjang antrian',
             }
+            
+        self._antrian[isbn].enqueue(nim)
+        posisi = len(self._antrian[isbn])
+
+        return {
+            'berhasil': True,
+            'pesan'   : (f'[ANTRIAN] {nim} berhasil masuk antrian {isbn}. '
+                         f'Posisi ke-{posisi}.'),
+            'big_o'   : 'enqueue O(1)',
+        }
