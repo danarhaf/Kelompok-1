@@ -30,3 +30,18 @@ class ManajerAntrian:
         # dict: isbn -> Queue
         # diisi saat sistem pertama kali load koleksi
         self._antrian: dict[str, Queue] = {}
+    
+    # ----------------------------------------------------------
+    # inisialisasi_antrian
+    # Daftarkan semua ISBN ke dict antrian saat startup.
+    # Big-O Waktu : O(n) — satu iterasi per buku
+    # Big-O Ruang : O(n) — satu Queue kosong per buku
+    # ----------------------------------------------------------
+    def inisialisasi_antrian(self, daftar_isbn: list[str]):
+        """
+        Dipanggil sekali di main() setelah generate_koleksi.
+        Pastikan setiap ISBN punya slot Queue meski belum ada pemesan.
+        """
+        for isbn in daftar_isbn:
+            if isbn not in self._antrian:
+                self._antrian[isbn] = Queue()
