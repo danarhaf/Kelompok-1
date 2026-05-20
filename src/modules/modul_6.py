@@ -90,3 +90,43 @@ class CLI:
             'LAPORAN_BULAN'     : self._handle_laporan_bulan,
             'BANTUAN'           : self._handle_bantuan,
         }
+        
+
+    # ----------------------------------------------------------
+    # jalankan — loop utama CLI
+    # ----------------------------------------------------------
+    def jalankan(self):
+        print(BANNER)
+        while True:
+            try:
+                masukan = input('>> ').strip()
+            except (EOFError, KeyboardInterrupt):
+                print('\n[SISTEM] Sesi berakhir.')
+                break
+
+            if not masukan:
+                continue
+
+            token = masukan.split()
+            perintah = token[0].upper()
+
+            if perintah == 'KELUAR':
+                print('[SISTEM] Terima kasih. Program selesai.')
+                break
+
+            handler = self._handler.get(perintah)
+            if handler is None:
+                print(f'[ERROR] Perintah tidak dikenal: {perintah}. '
+                    f'Ketik BANTUAN untuk daftar perintah.')
+                continue
+
+            # jalankan handler, tangkap error agar loop tidak berhenti
+            try:
+                handler(token)
+            except Exception as e:
+                print(f'[ERROR] {e}')
+
+    # ── handler per perintah ──────────────────────────────────
+
+    def _handle_bantuan(self, token):
+        print(BANTUAN)
