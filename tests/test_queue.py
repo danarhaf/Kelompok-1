@@ -103,3 +103,16 @@ def test_peek_menunjuk_head_bukan_tail():
     assert q.peek() == 1
     q.dequeue()
     assert q.peek() == 2
+
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 4 — tampilkan_antrian
+# ══════════════════════════════════════════════════════════════
+
+def test_tampilkan_antrian_urutan_benar():
+    q = buat_queue('A', 'B', 'C', 'D')
+    assert q.tampilkan_antrian() == ['A', 'B', 'C', 'D']
+
+
+def test_tampilkan_antrian_kosong_kembalikan_list_kosong():
+    q = Queue()
+    assert q.tampilkan_antrian() == []
