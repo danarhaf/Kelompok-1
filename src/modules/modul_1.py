@@ -173,4 +173,11 @@ class ManajerAntrian:
             return False
         return nim in self._antrian[isbn].tampilkan_antrian()
     
-    
+    # ----------------------------------------------------------
+    # panjang_antrian — utilitas untuk modul lain
+    # Big-O Waktu : O(1)
+    # ----------------------------------------------------------
+    def panjang_antrian(self, isbn: str) -> int:
+        if isbn not in self._antrian:
+            return 0
+        return len(self._antrian[isbn])
