@@ -240,3 +240,35 @@ def test_bfs_tidak_mengunjungi_node_dua_kali():
     assert len(isbn_hasil) == len(set(isbn_hasil))
     # ISBN-0001 (sumber) tidak boleh masuk hasil
     assert 'ISBN-0001' not in isbn_hasil
+    # ══════════════════════════════════════════════════════════════
+# KELOMPOK 6 — skala besar (80 buku sesuai parameter sistem)
+# ══════════════════════════════════════════════════════════════
+
+def test_skala_80_buku_graf_tidak_error():
+    """
+    Simulasi 80 buku dengan ko-pinjam acak.
+    Memastikan tidak ada error pada skala penuh sistem perpustakaan.
+    Big-O BFS: O(V+E) = O(80 + E).
+    """
+    import random
+    random.seed(13)
+
+    g = GraphRekBuku()
+    isbn_list = [f'ISBN-{i:04d}' for i in range(1, 81)]
+
+    # simulasi 200 transaksi: setiap anggota pinjam 2 buku acak
+    for _ in range(200):
+        a, b = random.sample(isbn_list, 2)
+        g.add_copinjam(a, b)
+
+    info = g.info_graf()
+    assert info['vertex'] <= 80   # tidak melebihi jumlah buku
+
+    # BFS dari buku pertama tidak boleh error
+    sumber = isbn_list[0]
+    hasil = g.rekomendasikan(sumber, max_hop=2)
+
+    # tidak ada duplikat di hasil
+    isbn_hasil = [r[0] for r in hasil]
+    assert len(isbn_hasil) == len(set(isbn_hasil))
+    assert sumber not in isbn_hasil
