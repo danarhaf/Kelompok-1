@@ -9,20 +9,17 @@ import os
 import math
 import random
 
-# path ke src/ agar bisa import data_structures dan data_model
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+# tambahkan src/ ke sys.path agar semua import dari dalam src/ bisa ditemukan
+_SRC = os.path.join(os.path.dirname(__file__), '..', 'src')
+sys.path.insert(0, _SRC)
 
 from data_structures.bst import BSTKatalog
-from data_model import Buku          # <-- pakai Buku asli dari data_model
-from data_model import STATUS        # <-- pakai konstanta STATUS yang sama
+from data_model import Buku, STATUS
 
 
 # ── helper ────────────────────────────────────────────────────
 def buku(isbn, judul='', kategori='Teknik', status=0):
-    """
-    Buat objek Buku asli (dari data_model) untuk keperluan test.
-    Pengarang diisi dummy agar tidak error di dataclass.
-    """
+    """Buat objek Buku asli dari data_model untuk keperluan test."""
     return Buku(
         isbn=isbn,
         judul=judul if judul else f'Judul-{isbn}',
@@ -33,7 +30,7 @@ def buku(isbn, judul='', kategori='Teknik', status=0):
 
 
 def bst_dengan(*isbn_list):
-    """Buat BST dan sisipkan Buku asli berdasarkan daftar ISBN."""
+    """Buat BST dan sisipkan Buku berdasarkan daftar ISBN."""
     pohon = BSTKatalog()
     for isbn in isbn_list:
         pohon.insert(buku(isbn))
@@ -49,6 +46,7 @@ def test_bst_baru_kosong():
     assert len(pohon) == 0
     assert pohon.search('ISBN-0001') is None
     assert pohon.inorder() == []
+
 
 # ══════════════════════════════════════════════════════════════
 # KELOMPOK 2 — insert
@@ -67,12 +65,13 @@ def test_insert_banyak_buku_size_benar():
 
 
 def test_insert_isbn_duplikat_update_bukan_tambah():
-    # ISBN yang sama tidak boleh menambah node baru, hanya update datanya
+    # ISBN sama tidak boleh menambah node baru, hanya update data
     pohon = BSTKatalog()
     pohon.insert(buku('ISBN-0010', judul='Versi Lama'))
     pohon.insert(buku('ISBN-0010', judul='Versi Baru'))
-    assert len(pohon) == 1             # tetap satu node
+    assert len(pohon) == 1                              # tetap satu node
     assert pohon.search('ISBN-0010').judul == 'Versi Baru'   # data terupdate
+
 
 # ══════════════════════════════════════════════════════════════
 # KELOMPOK 3 — search
@@ -91,22 +90,21 @@ def test_search_isbn_tidak_ada_kembalikan_none():
 
 
 def test_search_di_bst_kosong():
-    pohon = BSTKatalog()
-    assert pohon.search('ISBN-0001') is None
+    assert BSTKatalog().search('ISBN-0001') is None
 
 
 def test_search_root_langsung():
     pohon = bst_dengan('ISBN-0040')
     assert pohon.search('ISBN-0040').isbn == 'ISBN-0040'
-    
+
+
 # ══════════════════════════════════════════════════════════════
-# KELOMPOK 4 — inorder (urutan ISBN)
+# KELOMPOK 4 — inorder
 # ══════════════════════════════════════════════════════════════
 
 def test_inorder_menghasilkan_urutan_isbn_menaik():
     pohon = bst_dengan('ISBN-0030', 'ISBN-0010', 'ISBN-0050', 'ISBN-0020', 'ISBN-0040')
-    hasil = pohon.inorder()
-    isbn_urut = [b.isbn for b in hasil]
+    isbn_urut = [b.isbn for b in pohon.inorder()]
     assert isbn_urut == sorted(isbn_urut)
 
 
@@ -123,8 +121,8 @@ def test_inorder_bst_satu_node():
 
 
 def test_inorder_bst_kosong_kembalikan_list_kosong():
-    pohon = BSTKatalog()
-    assert pohon.inorder() == []
+    assert BSTKatalog().inorder() == []
+
 
 # ══════════════════════════════════════════════════════════════
 # KELOMPOK 5 — update_status (pakai konstanta STATUS dari data_model)
@@ -154,12 +152,12 @@ def test_update_status_ke_dipesan():
     pohon.update_status('ISBN-0015', STATUS['DIPESAN'])
     assert pohon.search('ISBN-0015').status == STATUS['DIPESAN']
 
+
 # ══════════════════════════════════════════════════════════════
 # KELOMPOK 6 — delete
 # ══════════════════════════════════════════════════════════════
 
 def test_delete_node_daun():
-    # Kasus 1: hapus node tanpa anak (daun)
     pohon = bst_dengan('ISBN-0010', 'ISBN-0005', 'ISBN-0015')
     assert pohon.delete('ISBN-0005') is True
     assert pohon.search('ISBN-0005') is None
@@ -167,16 +165,14 @@ def test_delete_node_daun():
 
 
 def test_delete_node_satu_anak_kiri():
-    # Kasus 2a: node hanya punya anak kiri
     pohon = bst_dengan('ISBN-0010', 'ISBN-0005', 'ISBN-0003')
     pohon.delete('ISBN-0005')
     assert pohon.search('ISBN-0005') is None
-    assert pohon.search('ISBN-0003') is not None   # anak tetap ada
+    assert pohon.search('ISBN-0003') is not None
     assert len(pohon) == 2
 
 
 def test_delete_node_satu_anak_kanan():
-    # Kasus 2b: node hanya punya anak kanan
     pohon = bst_dengan('ISBN-0010', 'ISBN-0005', 'ISBN-0007')
     pohon.delete('ISBN-0005')
     assert pohon.search('ISBN-0005') is None
@@ -185,12 +181,11 @@ def test_delete_node_satu_anak_kanan():
 
 
 def test_delete_node_dua_anak():
-    # Kasus 3: hapus node dengan dua anak (pakai inorder successor)
     pohon = bst_dengan('ISBN-0010', 'ISBN-0005', 'ISBN-0015', 'ISBN-0012', 'ISBN-0020')
     assert pohon.delete('ISBN-0015') is True
     assert pohon.search('ISBN-0015') is None
     isbn_urut = [b.isbn for b in pohon.inorder()]
-    assert isbn_urut == sorted(isbn_urut)   # BST tetap valid setelah delete
+    assert isbn_urut == sorted(isbn_urut)
     assert len(pohon) == 4
 
 
@@ -216,9 +211,10 @@ def test_delete_semua_node_satu_per_satu():
         pohon.delete(isbn)
     assert len(pohon) == 0
     assert pohon.inorder() == []
-    
+
+
 # ══════════════════════════════════════════════════════════════
-# KELOMPOK 7 — hitung_tinggi (untuk analisis Big-O)
+# KELOMPOK 7 — hitung_tinggi
 # ══════════════════════════════════════════════════════════════
 
 def test_tinggi_bst_kosong_adalah_nol():
@@ -232,7 +228,7 @@ def test_tinggi_satu_node_adalah_satu():
 def test_tinggi_pohon_miring_worst_case():
     """
     Insert urutan leksikografis naik -> pohon miring ke kanan.
-    Tinggi = n = jumlah node (worst-case O(n)).
+    Tinggi = n (worst-case O(n)).
     Relevan untuk Pertanyaan Analisis no. 1.
     """
     pohon = BSTKatalog()
@@ -244,26 +240,26 @@ def test_tinggi_pohon_miring_worst_case():
 
 def test_tinggi_pohon_seimbang_sekitar_log_n():
     """
-    Insert urutan tidak terurut -> pohon lebih seimbang.
-    Tinggi mendekati log2(n), bukan n.
+    Insert tidak terurut -> pohon lebih seimbang, tinggi mendekati log2(n).
     """
     urutan_acak = ['ISBN-0040', 'ISBN-0020', 'ISBN-0060',
-                'ISBN-0010', 'ISBN-0030', 'ISBN-0050', 'ISBN-0070']
+                   'ISBN-0010', 'ISBN-0030', 'ISBN-0050', 'ISBN-0070']
     pohon = bst_dengan(*urutan_acak)
     batas = math.ceil(math.log2(len(urutan_acak) + 1))
-    assert pohon.hitung_tinggi() <= batas + 1   # toleransi 1 level
-    
+    assert pohon.hitung_tinggi() <= batas + 1
+
+
 # ══════════════════════════════════════════════════════════════
 # KELOMPOK 8 — integrasi generate_koleksi (80 buku sistem penuh)
 # ══════════════════════════════════════════════════════════════
 
 def test_insert_80_buku_dari_generate_koleksi():
     """
-    Pakai generate_koleksi() asli (seed=13) agar test ini
-    benar-benar mencerminkan kondisi sistem saat dijalankan.
-    Semua buku harus bisa ditemukan dan inorder terurut.
+    Pakai generate_koleksi() asli (seed=13) agar mencerminkan
+    kondisi sistem nyata saat dijalankan.
     """
-    from generate_data import generate_koleksi   # <-- pakai generate_data asli
+    # generate_data.py ada di src/ yang sudah masuk sys.path di atas
+    from generate_data import generate_koleksi
 
     pohon = BSTKatalog()
     koleksi = generate_koleksi(80)
@@ -291,11 +287,9 @@ def test_update_status_setelah_generate_koleksi():
     for b in generate_koleksi(80):
         pohon.insert(b)
 
-    # pinjam buku pertama
     ok = pohon.update_status('ISBN-0001', STATUS['DIPINJAM'])
     assert ok is True
     assert pohon.search('ISBN-0001').status == STATUS['DIPINJAM']
 
-    # kembalikan
     pohon.update_status('ISBN-0001', STATUS['TERSEDIA'])
     assert pohon.search('ISBN-0001').status == STATUS['TERSEDIA']
