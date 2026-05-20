@@ -123,7 +123,7 @@ class ManajerAntrian:
             'pesan'   : f'[ANTRIAN] Pesanan {nim} untuk {isbn} berhasil dibatalkan.',
             'big_o'   : 'O(k) rebuild antrian',
         }
-        
+
     # ----------------------------------------------------------
     # proses_pengembalian
     # Saat buku dikembalikan, ambil pemesan pertama di antrian.
@@ -138,3 +138,28 @@ class ManajerAntrian:
         if isbn not in self._antrian or self._antrian[isbn].is_empty():
             return None   # tidak ada yang mengantri
         return self._antrian[isbn].dequeue()   # O(1)  
+
+    # ----------------------------------------------------------
+    # lihat_antrian
+    # Tampilkan seluruh isi antrian suatu buku (untuk CLI ANTRIAN).
+    # Big-O Waktu : O(k) — traversal antrian
+    # ----------------------------------------------------------
+    def lihat_antrian(self, isbn: str) -> dict:
+        """
+        Kembalikan list nim dalam antrian isbn beserta info ukuran.
+        """
+        if isbn not in self._antrian:
+            return {
+                'isbn'   : isbn,
+                'antrian': [],
+                'panjang': 0,
+                'big_o'  : 'O(1)',
+            }
+
+        isi = self._antrian[isbn].tampilkan_antrian()   # O(k)
+        return {
+            'isbn'   : isbn,
+            'antrian': isi,
+            'panjang': len(isi),
+            'big_o'  : 'O(k) traversal antrian',
+        }
