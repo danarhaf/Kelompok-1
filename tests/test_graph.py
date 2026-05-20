@@ -175,3 +175,32 @@ def test_rekomendasi_min_bobot_memfilter_edge_lemah():
     isbn_hasil = [r[0] for r in hasil]
     assert 'ISBN-0003' not in isbn_hasil   # disaring karena bobot=1
     assert 'ISBN-0002' in isbn_hasil       # lolos karena bobot=2
+    # ══════════════════════════════════════════════════════════════
+# KELOMPOK 4 — tetangga & info_graf
+# ══════════════════════════════════════════════════════════════
+
+def test_tetangga_isbn_ada():
+    g = buat_graf_sederhana()
+    tetangga = g.tetangga('ISBN-0001')
+    assert len(tetangga) == 2   # ISBN-0002 dan ISBN-0003
+
+
+def test_tetangga_isbn_tidak_ada_kembalikan_list_kosong():
+    g = GraphRekBuku()
+    assert g.tetangga('ISBN-9999') == []
+
+
+def test_info_graf_vertex_dan_edge_benar():
+    g = buat_graf_sederhana()
+    info = g.info_graf()
+    # vertex: ISBN-0001, ISBN-0002, ISBN-0003, ISBN-0004
+    assert info['vertex'] == 4
+    # edge: (0001,0002), (0001,0003), (0002,0004) = 3 edge
+    assert info['edge'] == 3
+
+
+def test_derajat_rata_rata():
+    g = buat_graf_sederhana()
+    info = g.info_graf()
+    # total derajat = 2*E = 6, vertex = 4 -> rata-rata = 1.5
+    assert info['derajat_rata_rata'] == 1.5
