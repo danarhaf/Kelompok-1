@@ -217,3 +217,38 @@ def test_delete_semua_node_satu_per_satu():
     assert len(pohon) == 0
     assert pohon.inorder() == []
     
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 7 — hitung_tinggi (untuk analisis Big-O)
+# ══════════════════════════════════════════════════════════════
+
+def test_tinggi_bst_kosong_adalah_nol():
+    assert BSTKatalog().hitung_tinggi() == 0
+
+
+def test_tinggi_satu_node_adalah_satu():
+    assert bst_dengan('ISBN-0010').hitung_tinggi() == 1
+
+
+def test_tinggi_pohon_miring_worst_case():
+    """
+    Insert urutan leksikografis naik -> pohon miring ke kanan.
+    Tinggi = n = jumlah node (worst-case O(n)).
+    Relevan untuk Pertanyaan Analisis no. 1.
+    """
+    pohon = BSTKatalog()
+    n = 10
+    for i in range(1, n + 1):
+        pohon.insert(buku(f'ISBN-{i:04d}'))
+    assert pohon.hitung_tinggi() == n
+
+
+def test_tinggi_pohon_seimbang_sekitar_log_n():
+    """
+    Insert urutan tidak terurut -> pohon lebih seimbang.
+    Tinggi mendekati log2(n), bukan n.
+    """
+    urutan_acak = ['ISBN-0040', 'ISBN-0020', 'ISBN-0060',
+                'ISBN-0010', 'ISBN-0030', 'ISBN-0050', 'ISBN-0070']
+    pohon = bst_dengan(*urutan_acak)
+    batas = math.ceil(math.log2(len(urutan_acak) + 1))
+    assert pohon.hitung_tinggi() <= batas + 1   # toleransi 1 level
