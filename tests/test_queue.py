@@ -84,3 +84,22 @@ def test_queue_kosong_setelah_semua_didequeue():
     q.dequeue()
     assert q.is_empty() is True
     assert len(q) == 0
+
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 3 — peek (tidak merusak antrian)
+# ══════════════════════════════════════════════════════════════
+
+def test_peek_tidak_menghapus_elemen():
+    q = buat_queue('NIM-010', 'NIM-011')
+    hasil_peek = q.peek()
+    assert hasil_peek == 'NIM-010'
+    # setelah peek, ukuran tidak boleh berubah
+    assert len(q) == 2
+
+
+def test_peek_menunjuk_head_bukan_tail():
+    q = buat_queue(1, 2, 3)
+    # peek harus selalu mengembalikan elemen paling depan
+    assert q.peek() == 1
+    q.dequeue()
+    assert q.peek() == 2
