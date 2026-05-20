@@ -215,3 +215,26 @@ def test_archiving_stack_tetap_berfungsi_normal_setelahnya():
     assert s.pop() == 99
 
 
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 7 — skala besar (500 operasi)
+# ══════════════════════════════════════════════════════════════
+
+def test_500_push_lalu_500_pop_urutan_lifo():
+    """
+    Tes beban 500 operasi.
+    Memastikan pointer top tidak rusak pada skala transaksi harian.
+    Big-O total: O(n), setiap push/pop adalah O(1).
+    """
+    s = Stack()
+    n = 500
+    for i in range(n):
+        s.push(i)
+    assert len(s) == n
+
+    for i in range(n - 1, -1, -1):
+        nilai = s.pop()
+        assert nilai == i   # LIFO: yang terakhir push harus keluar duluan
+
+    assert s.is_empty() is True
+
+
