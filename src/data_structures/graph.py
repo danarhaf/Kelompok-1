@@ -32,3 +32,15 @@ class GraphRekBuku:
     def tambah_vertex(self, isbn):
         if isbn not in self._adj:
             self._adj[isbn] = []
+    # ----------------------------------------------------------
+    # add_copinjam — tambah atau naikkan bobot edge (isbn_a, isbn_b)
+    # Dipanggil setiap kali dua buku dipinjam dalam satu sesi anggota
+    # Big-O Waktu : O(deg) — perlu scan tetangga untuk cek duplikat
+    # Big-O Ruang : O(1) per panggilan
+    # ----------------------------------------------------------
+    def add_copinjam(self, isbn_a, isbn_b):
+        if isbn_a == isbn_b:
+            return   # tidak perlu self-loop
+
+        self.tambah_vertex(isbn_a)
+        self.tambah_vertex(isbn_b)
