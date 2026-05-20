@@ -76,3 +76,9 @@ class ManajerRiwayat:
             return None
         return tx
     
+    # ----------------------------------------------------------
+    # intip_terakhir — lihat transaksi teratas tanpa menghapus
+    # Big-O Waktu : O(1)
+    # ----------------------------------------------------------
+    def intip_terakhir(self) -> dict | None:
+        return self._stack.peek()   # O(1)
