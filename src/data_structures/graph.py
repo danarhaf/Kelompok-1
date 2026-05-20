@@ -134,3 +134,10 @@ class GraphRekBuku:
                 j -= 1
             data[j + 1] = kunci
         return data
+        # ----------------------------------------------------------
+    # tetangga — kembalikan daftar tetangga langsung suatu isbn
+    # Big-O Waktu : O(1) — lookup dict langsung
+    # Big-O Ruang : O(deg)
+    # ----------------------------------------------------------
+    def tetangga(self, isbn):
+        return self._adj.get(isbn, [])
