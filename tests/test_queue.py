@@ -20,3 +20,25 @@ def buat_queue(*items):
     for item in items:
         q.enqueue(item)
     return q
+
+
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 1 — kondisi awal / state kosong
+# ══════════════════════════════════════════════════════════════
+
+def test_queue_baru_pasti_kosong():
+    # Queue yang baru dibuat harus langsung kosong
+    q = Queue()
+    assert q.is_empty() is True
+    assert len(q) == 0
+
+
+def test_dequeue_dari_queue_kosong_kembalikan_none():
+    # Dequeue dari queue kosong tidak boleh error, cukup kembalikan None
+    q = Queue()
+    assert q.dequeue() is None
+
+
+def test_peek_queue_kosong_kembalikan_none():
+    q = Queue()
+    assert q.peek() is None
