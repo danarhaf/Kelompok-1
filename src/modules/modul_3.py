@@ -109,3 +109,54 @@ class ManajerKatalog:
                         f'selama {durasi} hari. TX-{tx_id:04d}'),
             'big_o'   : 'O(log n) BST search + update',
         }
+
+    # ----------------------------------------------------------
+    # kembalikan — proses pengembalian buku
+    # Big-O Waktu : O(log n)
+    # ----------------------------------------------------------
+    def kembalikan(self, isbn: str, manajer_riwayat,
+                manajer_antrian) -> dict:
+        """
+        Kembalikan buku ke perpustakaan.
+        Jika ada antrian, status menjadi DIPESAN dan anggota pertama
+        di antrian diprioritaskan. Jika tidak ada antrian, TERSEDIA.
+        Koordinasi dengan modul_1 (antrian) dan modul_2 (riwayat).
+        """
+        buku = self._bst.search(isbn)   # O(log n)
+
+        if buku is None:
+            return {
+                'berhasil': False,
+                'pesan'   : f'[KEMBALIKAN] Buku {isbn} tidak ditemukan.',
+                'big_o'   : 'O(log n) BST search',
+            }
+
+        if buku.status == STATUS['TERSEDIA']:
+            return {
+                'berhasil': False,
+                'pesan'   : f'[KEMBALIKAN] Buku {isbn} sudah berstatus TERSEDIA.',
+                'big_o'   : 'O(log n) BST search',
+            }
+
+        # cek antrian — O(1) dequeue
+        pemesan_berikut = manajer_antrian.proses_pengembalian(isbn)
+
+        if pemesan_berikut:
+            # ada anggota mengantri -> status DIPESAN
+            self._bst.update_status(isbn, STATUS['DIPESAN'])   # O(log n)
+            tx_id = manajer_riwayat.catat('KEMBALIKAN', pemesan_berikut, isbn)
+            pesan = (f'[KEMBALIKAN] {isbn} dikembalikan. '
+                    f'Langsung dipesan oleh {pemesan_berikut}. TX-{tx_id:04d}')
+        else:
+            # tidak ada antrian -> TERSEDIA
+            self._bst.update_status(isbn, STATUS['TERSEDIA'])   # O(log n)
+            tx_id = manajer_riwayat.catat('KEMBALIKAN', '-', isbn)
+            pesan = f'[KEMBALIKAN] {isbn} berhasil dikembalikan. Status: TERSEDIA. TX-{tx_id:04d}'
+
+        return {
+            'berhasil'        : True,
+            'tx_id'           : tx_id,
+            'pemesan_berikut' : pemesan_berikut,
+            'pesan'           : pesan,
+            'big_o'           : 'O(log n) BST search + update, O(1) dequeue antrian',
+        }
