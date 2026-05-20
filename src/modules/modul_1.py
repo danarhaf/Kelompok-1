@@ -163,3 +163,14 @@ class ManajerAntrian:
             'panjang': len(isi),
             'big_o'  : 'O(k) traversal antrian',
         }
+
+    # ----------------------------------------------------------
+    # _sudah_antri — cek apakah nim sudah ada di antrian isbn
+    # Big-O Waktu : O(k)
+    # ----------------------------------------------------------
+    def _sudah_antri(self, isbn: str, nim: str) -> bool:
+        if isbn not in self._antrian:
+            return False
+        return nim in self._antrian[isbn].tampilkan_antrian()
+    
+    
