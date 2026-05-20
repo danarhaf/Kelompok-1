@@ -58,3 +58,21 @@ class ManajerRiwayat:
         }
         self._stack.push(transaksi)   # O(1)
         return self._tx_counter
+    
+    # ----------------------------------------------------------
+    # batalkan_terakhir (UNDO)
+    # Pop transaksi teratas dan kembalikan detailnya agar
+    # modul_3 dan modul_1 bisa membalik efeknya.
+    # Big-O Waktu : O(1) — pop dari top Stack
+    # ----------------------------------------------------------
+    def batalkan_terakhir(self) -> dict | None:
+        """
+        Ambil transaksi terakhir dari stack.
+        Kembalikan dict transaksi jika ada, None jika stack kosong.
+        Pemanggil (main / modul_3) bertanggung jawab membalik efeknya.
+        """
+        tx = self._stack.pop()   # O(1)
+        if tx is None:
+            return None
+        return tx
+    
