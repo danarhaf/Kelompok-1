@@ -42,3 +42,24 @@ def test_dequeue_dari_queue_kosong_kembalikan_none():
 def test_peek_queue_kosong_kembalikan_none():
     q = Queue()
     assert q.peek() is None
+
+    
+
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 2 — operasi dasar enqueue & dequeue
+# ══════════════════════════════════════════════════════════════
+
+def test_satu_enqueue_lalu_dequeue():
+    # enqueue satu elemen, dequeue harus mengembalikan elemen itu
+    q = Queue()
+    q.enqueue('NIM-001')
+    assert q.dequeue() == 'NIM-001'
+
+
+def test_urutan_fifo_terjaga():
+    # Yang pertama masuk harus pertama keluar
+    # enqueue: A, B, C  ->  dequeue harus: A, B, C
+    q = buat_queue('A', 'B', 'C')
+    assert q.dequeue() == 'A'
+    assert q.dequeue() == 'B'
+    assert q.dequeue() == 'C'
