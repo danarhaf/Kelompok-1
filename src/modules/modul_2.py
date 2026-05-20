@@ -116,3 +116,15 @@ class ManajerRiwayat:
     # ----------------------------------------------------------
     def ukuran(self) -> int:
         return len(self._stack)
+    
+    # ----------------------------------------------------------
+    # format_tampil — ubah dict transaksi ke string untuk CLI
+    # Big-O Waktu : O(1)
+    # ----------------------------------------------------------
+    @staticmethod
+    def format_tampil(tx: dict) -> str:
+        """Kembalikan baris ringkasan satu transaksi untuk ditampilkan CLI."""
+        from datetime import datetime
+        waktu_str = datetime.fromtimestamp(tx['waktu']).strftime('%Y-%m-%d %H:%M:%S')
+        return (f"[TX-{tx['tx_id']:04d}] {tx['aksi']:<12} | "
+                f"NIM: {tx['nim']} | ISBN: {tx['isbn']} | {waktu_str}")
