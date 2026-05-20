@@ -50,3 +50,27 @@ def test_bst_baru_kosong():
     assert pohon.search('ISBN-0001') is None
     assert pohon.inorder() == []
 
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 2 — insert
+# ══════════════════════════════════════════════════════════════
+
+def test_insert_satu_buku():
+    pohon = BSTKatalog()
+    pohon.insert(buku('ISBN-0001', judul='Algoritma Dasar'))
+    assert len(pohon) == 1
+    assert pohon.search('ISBN-0001') is not None
+
+
+def test_insert_banyak_buku_size_benar():
+    pohon = bst_dengan('ISBN-0005', 'ISBN-0002', 'ISBN-0008', 'ISBN-0001', 'ISBN-0003')
+    assert len(pohon) == 5
+
+
+def test_insert_isbn_duplikat_update_bukan_tambah():
+    # ISBN yang sama tidak boleh menambah node baru, hanya update datanya
+    pohon = BSTKatalog()
+    pohon.insert(buku('ISBN-0010', judul='Versi Lama'))
+    pohon.insert(buku('ISBN-0010', judul='Versi Baru'))
+    assert len(pohon) == 1             # tetap satu node
+    assert pohon.search('ISBN-0010').judul == 'Versi Baru'   # data terupdate
+
