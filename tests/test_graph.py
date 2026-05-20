@@ -111,3 +111,55 @@ def test_rekomendasi_hop1_langsung():
     ISBN-0001 terhubung langsung ke ISBN-0002 dan ISBN-0003.
     Dengan max_hop=1 hanya tetangga langsung yang muncul.
     """
+     g = buat_graf_sederhana()
+    hasil = g.rekomendasikan('ISBN-0001', max_hop=1)
+    isbn_hasil = [r[0] for r in hasil]
+    assert 'ISBN-0002' in isbn_hasil
+    assert 'ISBN-0003' in isbn_hasil
+    # ISBN-0004 hanya bisa dicapai lewat ISBN-0002 (hop 2), tidak boleh muncul
+    assert 'ISBN-0004' not in isbn_hasil
+
+
+def test_rekomendasi_hop2_mencakup_tetangga_tetangga():
+    """
+    Dengan max_hop=2, ISBN-0004 harus muncul karena:
+      ISBN-0001 -> ISBN-0002 -> ISBN-0004
+    """
+    g = buat_graf_sederhana()
+    hasil = g.rekomendasikan('ISBN-0001', max_hop=2)
+    isbn_hasil = [r[0] for r in hasil]
+    assert 'ISBN-0004' in isbn_hasil
+
+
+def test_rekomendasi_tidak_menyertakan_sumber():
+    # ISBN sumber tidak boleh muncul di hasil rekomendasi
+    g = buat_graf_sederhana()
+    hasil = g.rekomendasikan('ISBN-0001', max_hop=2)
+    isbn_hasil = [r[0] for r in hasil]
+    assert 'ISBN-0001' not in isbn_hasil
+
+
+def test_rekomendasi_tidak_ada_duplikat():
+    # Setiap ISBN hanya boleh muncul sekali di hasil
+    g = buat_graf_sederhana()
+    hasil = g.rekomendasikan('ISBN-0001', max_hop=2)
+    isbn_hasil = [r[0] for r in hasil]
+    assert len(isbn_hasil) == len(set(isbn_hasil))
+
+
+def test_rekomendasi_terurut_bobot_turun():
+    """
+    Hasil harus diurutkan berdasarkan bobot kumulatif (sering ko-pinjam duluan).
+    Dari graf sederhana, ISBN-0002 (bobot 2) harus di atas ISBN-0003 (bobot 1).
+    """
+    g = buat_graf_sederhana()
+    hasil = g.rekomendasikan('ISBN-0001', max_hop=1)
+    bobot_list = [r[1] for r in hasil]
+    assert bobot_list == sorted(bobot_list, reverse=True)
+
+
+def test_rekomendasi_isbn_terisolasi_kembalikan_kosong():
+    # Buku yang tidak punya tetangga tidak bisa direkomendasikan
+    g = GraphRekBuku()
+    g.tambah_vertex('ISBN-0099')   # vertex ada tapi tidak ada edge
+    assert g.rekomendasikan('ISBN-0099') == []
