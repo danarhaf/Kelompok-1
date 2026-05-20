@@ -126,3 +126,31 @@ def test_inorder_bst_kosong_kembalikan_list_kosong():
     pohon = BSTKatalog()
     assert pohon.inorder() == []
 
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 5 — update_status (pakai konstanta STATUS dari data_model)
+# ══════════════════════════════════════════════════════════════
+
+def test_update_status_tersedia_ke_dipinjam():
+    pohon = bst_dengan('ISBN-0001')
+    berhasil = pohon.update_status('ISBN-0001', STATUS['DIPINJAM'])
+    assert berhasil is True
+    assert pohon.search('ISBN-0001').status == STATUS['DIPINJAM']
+
+
+def test_update_status_dipinjam_ke_tersedia():
+    pohon = BSTKatalog()
+    pohon.insert(buku('ISBN-0002', status=STATUS['DIPINJAM']))
+    pohon.update_status('ISBN-0002', STATUS['TERSEDIA'])
+    assert pohon.search('ISBN-0002').status == STATUS['TERSEDIA']
+
+
+def test_update_status_isbn_tidak_ada_kembalikan_false():
+    pohon = bst_dengan('ISBN-0010')
+    assert pohon.update_status('ISBN-9999', STATUS['DIPINJAM']) is False
+
+
+def test_update_status_ke_dipesan():
+    pohon = bst_dengan('ISBN-0015')
+    pohon.update_status('ISBN-0015', STATUS['DIPESAN'])
+    assert pohon.search('ISBN-0015').status == STATUS['DIPESAN']
+
