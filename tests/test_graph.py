@@ -204,3 +204,39 @@ def test_derajat_rata_rata():
     info = g.info_graf()
     # total derajat = 2*E = 6, vertex = 4 -> rata-rata = 1.5
     assert info['derajat_rata_rata'] == 1.5
+    # ══════════════════════════════════════════════════════════════
+# KELOMPOK 5 — skenario realistis perpustakaan
+# ══════════════════════════════════════════════════════════════
+
+def test_skenario_anggota_pinjam_dua_buku_bersama():
+    """
+    Simulasi: setiap kali anggota pinjam 2 buku sekaligus,
+    panggil add_copinjam untuk pasangan tersebut.
+    Setelah 5 sesi, bobot edge harus mencerminkan frekuensi.
+    """
+    g = GraphRekBuku()
+    # 5 anggota masing-masing pinjam ISBN-0001 dan ISBN-0005 bersama
+    for _ in range(5):
+        g.add_copinjam('ISBN-0001', 'ISBN-0005')
+
+    bobot = next(b for isbn, b in g.tetangga('ISBN-0001') if isbn == 'ISBN-0005')
+    assert bobot == 5
+
+
+def test_bfs_tidak_mengunjungi_node_dua_kali():
+    """
+    Graf dengan siklus: A-B, B-C, C-A.
+    BFS harus tetap selesai tanpa infinite loop.
+    """
+    g = GraphRekBuku()
+    g.add_copinjam('ISBN-0001', 'ISBN-0002')
+    g.add_copinjam('ISBN-0002', 'ISBN-0003')
+    g.add_copinjam('ISBN-0003', 'ISBN-0001')   # siklus
+
+    hasil = g.rekomendasikan('ISBN-0001', max_hop=2)
+    isbn_hasil = [r[0] for r in hasil]
+
+    # tidak ada duplikat meski ada siklus
+    assert len(isbn_hasil) == len(set(isbn_hasil))
+    # ISBN-0001 (sumber) tidak boleh masuk hasil
+    assert 'ISBN-0001' not in isbn_hasil
