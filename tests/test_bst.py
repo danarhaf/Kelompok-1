@@ -154,3 +154,66 @@ def test_update_status_ke_dipesan():
     pohon.update_status('ISBN-0015', STATUS['DIPESAN'])
     assert pohon.search('ISBN-0015').status == STATUS['DIPESAN']
 
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 6 — delete
+# ══════════════════════════════════════════════════════════════
+
+def test_delete_node_daun():
+    # Kasus 1: hapus node tanpa anak (daun)
+    pohon = bst_dengan('ISBN-0010', 'ISBN-0005', 'ISBN-0015')
+    assert pohon.delete('ISBN-0005') is True
+    assert pohon.search('ISBN-0005') is None
+    assert len(pohon) == 2
+
+
+def test_delete_node_satu_anak_kiri():
+    # Kasus 2a: node hanya punya anak kiri
+    pohon = bst_dengan('ISBN-0010', 'ISBN-0005', 'ISBN-0003')
+    pohon.delete('ISBN-0005')
+    assert pohon.search('ISBN-0005') is None
+    assert pohon.search('ISBN-0003') is not None   # anak tetap ada
+    assert len(pohon) == 2
+
+
+def test_delete_node_satu_anak_kanan():
+    # Kasus 2b: node hanya punya anak kanan
+    pohon = bst_dengan('ISBN-0010', 'ISBN-0005', 'ISBN-0007')
+    pohon.delete('ISBN-0005')
+    assert pohon.search('ISBN-0005') is None
+    assert pohon.search('ISBN-0007') is not None
+    assert len(pohon) == 2
+
+
+def test_delete_node_dua_anak():
+    # Kasus 3: hapus node dengan dua anak (pakai inorder successor)
+    pohon = bst_dengan('ISBN-0010', 'ISBN-0005', 'ISBN-0015', 'ISBN-0012', 'ISBN-0020')
+    assert pohon.delete('ISBN-0015') is True
+    assert pohon.search('ISBN-0015') is None
+    isbn_urut = [b.isbn for b in pohon.inorder()]
+    assert isbn_urut == sorted(isbn_urut)   # BST tetap valid setelah delete
+    assert len(pohon) == 4
+
+
+def test_delete_root():
+    pohon = bst_dengan('ISBN-0010', 'ISBN-0005', 'ISBN-0015')
+    pohon.delete('ISBN-0010')
+    assert pohon.search('ISBN-0010') is None
+    assert len(pohon) == 2
+    isbn_urut = [b.isbn for b in pohon.inorder()]
+    assert isbn_urut == sorted(isbn_urut)
+
+
+def test_delete_isbn_tidak_ada_kembalikan_false():
+    pohon = bst_dengan('ISBN-0010')
+    assert pohon.delete('ISBN-9999') is False
+    assert len(pohon) == 1
+
+
+def test_delete_semua_node_satu_per_satu():
+    isbn_list = ['ISBN-0010', 'ISBN-0005', 'ISBN-0015', 'ISBN-0001', 'ISBN-0007']
+    pohon = bst_dengan(*isbn_list)
+    for isbn in isbn_list:
+        pohon.delete(isbn)
+    assert len(pohon) == 0
+    assert pohon.inorder() == []
+    
