@@ -109,3 +109,10 @@ class ManajerRiwayat:
         Stack tetap menyimpan maks_simpan transaksi terbaru.
         """
         return self._stack.pindah_ke_linked_list(maks_simpan)   # O(n)
+    
+    # ----------------------------------------------------------
+    # ukuran — jumlah transaksi di stack saat ini
+    # Big-O Waktu : O(1)
+    # ----------------------------------------------------------
+    def ukuran(self) -> int:
+        return len(self._stack)
