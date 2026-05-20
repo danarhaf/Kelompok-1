@@ -62,3 +62,34 @@ class GraphRekBuku:
         # belum ada — tambahkan edge baru
         daftar_tetangga.append((isbn_target, 1))
         return daftar_tetangga
+        # ----------------------------------------------------------
+    # rekomendasikan — BFS dari isbn sumber hingga max_hop lompatan
+    # Kembalikan list tuple (isbn, bobot_total, hop) terurut bobot turun
+    # Big-O Waktu : O(V + E) — BFS mengunjungi setiap node dan edge sekali
+    # Big-O Ruang : O(V) — visited set + antrian BFS
+    # ----------------------------------------------------------
+    def rekomendasikan(self, isbn_sumber, max_hop=2, min_bobot=1):
+        """
+        BFS terbatas kedalaman untuk menemukan buku yang sering
+        dipinjam bersama isbn_sumber dalam jarak <= max_hop.
+
+        Parameter min_bobot digunakan untuk menyaring rekomendasi:
+        hanya edge dengan frekuensi >= min_bobot yang diikuti.
+        Dampak Big-O: mengurangi E efektif -> BFS lebih cepat,
+        tapi bisa kehilangan rekomendasi dengan bobot rendah.
+        """
+        if isbn_sumber not in self._adj:
+            return []   # buku belum pernah dipinjam atau tidak di graf
+
+        # antrian BFS berisi tuple (isbn, hop_ke, akumulasi_bobot)
+        # pakai Queue Linked List sendiri, bukan deque bawaan
+        antrian = Queue()
+        antrian.enqueue((isbn_sumber, 0, 0))
+
+        # visited mencegah node dikunjungi lebih dari satu kali
+        dikunjungi = {isbn_sumber}
+
+        hasil = []   # list (isbn, bobot_total, hop)
+
+        while not antrian.is_empty():
+            isbn_kini, hop_kini, bobot_kumulatif = antrian.dequeue()
