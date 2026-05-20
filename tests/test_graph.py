@@ -42,3 +42,24 @@ def test_graf_baru_tidak_punya_vertex():
 
 
 def test_rekomendasi_isbn_tidak_ada_kembalikan_kosong():
+    g = GraphRekBuku()
+    assert g.rekomendasikan('ISBN-9999') == []
+
+
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 2 — tambah_vertex & add_copinjam
+# ══════════════════════════════════════════════════════════════
+
+def test_tambah_vertex_manual():
+    g = GraphRekBuku()
+    g.tambah_vertex('ISBN-0001')
+    info = g.info_graf()
+    assert info['vertex'] == 1
+    assert info['edge'] == 0
+
+
+def test_tambah_vertex_duplikat_tidak_dobel():
+    g = GraphRekBuku()
+    g.tambah_vertex('ISBN-0001')
+    g.tambah_vertex('ISBN-0001')   # panggil dua kali
+    assert g.info_graf()['vertex'] == 1
