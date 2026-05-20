@@ -163,3 +163,25 @@ class CLI:
         # catat ke graf rekomendasi jika berhasil
         if hasil['berhasil']:
             self._rekomendasi.catat_pinjam(nim, isbn)
+
+
+    # ----------------------------------------------------------
+    # KEMBALIKAN <isbn>
+    # Big-O: O(log n) BST, O(1) dequeue antrian
+    # ----------------------------------------------------------
+    def _handle_kembalikan(self, token):
+        if len(token) < 2:
+            print('[ERROR] Penggunaan: KEMBALIKAN <isbn>')
+            return
+        isbn = token[1].upper()
+
+        # cari siapa yang meminjam (dari riwayat stack)
+        nim_peminjam = self._cari_peminjam_aktif(isbn)
+
+        hasil = self._katalog.kembalikan(isbn, self._riwayat, self._antrian)
+        print(hasil['pesan'])
+        print(f'  Big-O: {hasil["big_o"]}')
+
+        # update sesi rekomendasi jika berhasil
+        if hasil['berhasil'] and nim_peminjam:
+            self._rekomendasi.catat_kembalikan(nim_peminjam, isbn)
