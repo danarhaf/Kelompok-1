@@ -163,3 +163,15 @@ def test_rekomendasi_isbn_terisolasi_kembalikan_kosong():
     g = GraphRekBuku()
     g.tambah_vertex('ISBN-0099')   # vertex ada tapi tidak ada edge
     assert g.rekomendasikan('ISBN-0099') == []
+   
+def test_rekomendasi_min_bobot_memfilter_edge_lemah():
+    """
+    Dengan min_bobot=2, edge berbobot 1 (ISBN-0001 <-> ISBN-0003) harus disaring.
+    Hanya ISBN-0002 (bobot 2) yang lolos.
+    Relevan untuk Pertanyaan Analisis no. 3.
+    """
+    g = buat_graf_sederhana()
+    hasil = g.rekomendasikan('ISBN-0001', max_hop=1, min_bobot=2)
+    isbn_hasil = [r[0] for r in hasil]
+    assert 'ISBN-0003' not in isbn_hasil   # disaring karena bobot=1
+    assert 'ISBN-0002' in isbn_hasil       # lolos karena bobot=2
