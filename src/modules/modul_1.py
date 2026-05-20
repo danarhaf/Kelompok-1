@@ -117,9 +117,24 @@ class ManajerAntrian:
                 queue_baru.enqueue(anggota)   # O(1) per enqueue
 
         self._antrian[isbn] = queue_baru
-        
+
         return {
             'berhasil': True,
             'pesan'   : f'[ANTRIAN] Pesanan {nim} untuk {isbn} berhasil dibatalkan.',
             'big_o'   : 'O(k) rebuild antrian',
         }
+        
+    # ----------------------------------------------------------
+    # proses_pengembalian
+    # Saat buku dikembalikan, ambil pemesan pertama di antrian.
+    # Big-O Waktu : O(1) — dequeue dari head
+    # ----------------------------------------------------------
+    def proses_pengembalian(self, isbn: str) -> str | None:
+        """
+        Dequeue nim terdepan sebagai pemesan prioritas.
+        Kembalikan nim jika ada, None jika antrian kosong.
+        Dipanggil oleh modul_2 (proses_kembalikan).
+        """
+        if isbn not in self._antrian or self._antrian[isbn].is_empty():
+            return None   # tidak ada yang mengantri
+        return self._antrian[isbn].dequeue()   # O(1)  
