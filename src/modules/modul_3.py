@@ -43,3 +43,27 @@ class ManajerKatalog:
         """Dipanggil sekali di main() saat startup."""
         for buku in daftar_buku:
             self._bst.insert(buku)   # O(log n)
+            
+    # ----------------------------------------------------------
+    # cari_buku — cari satu buku berdasarkan ISBN
+    # Big-O Waktu : O(log n) rata-rata
+    # ----------------------------------------------------------
+    def cari_buku(self, isbn: str) -> dict:
+        """
+        Cari buku di BST. Kembalikan dict info buku atau pesan error.
+        Dipanggil oleh CLI perintah CARI_BUKU <isbn>.
+        """
+        buku = self._bst.search(isbn)   # O(log n)
+        if buku is None:
+            return {
+                'berhasil': False,
+                'pesan'   : f'[KATALOG] Buku {isbn} tidak ditemukan.',
+                'big_o'   : 'O(log n) BST search',
+            }
+        return {
+            'berhasil': True,
+            'buku'    : buku,
+            'status'  : LABEL_STATUS.get(buku.status, '?'),
+            'pesan'   : self._format_buku(buku),
+            'big_o'   : 'O(log n) BST search',
+        }
