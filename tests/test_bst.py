@@ -99,3 +99,30 @@ def test_search_root_langsung():
     pohon = bst_dengan('ISBN-0040')
     assert pohon.search('ISBN-0040').isbn == 'ISBN-0040'
     
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 4 — inorder (urutan ISBN)
+# ══════════════════════════════════════════════════════════════
+
+def test_inorder_menghasilkan_urutan_isbn_menaik():
+    pohon = bst_dengan('ISBN-0030', 'ISBN-0010', 'ISBN-0050', 'ISBN-0020', 'ISBN-0040')
+    hasil = pohon.inorder()
+    isbn_urut = [b.isbn for b in hasil]
+    assert isbn_urut == sorted(isbn_urut)
+
+
+def test_inorder_jumlah_elemen_sama_dengan_len():
+    pohon = bst_dengan('ISBN-0001', 'ISBN-0002', 'ISBN-0003')
+    assert len(pohon.inorder()) == len(pohon)
+
+
+def test_inorder_bst_satu_node():
+    pohon = bst_dengan('ISBN-0007')
+    hasil = pohon.inorder()
+    assert len(hasil) == 1
+    assert hasil[0].isbn == 'ISBN-0007'
+
+
+def test_inorder_bst_kosong_kembalikan_list_kosong():
+    pohon = BSTKatalog()
+    assert pohon.inorder() == []
+
