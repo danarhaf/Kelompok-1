@@ -131,3 +131,9 @@ class ManajerRekomendasi:
             'jumlah'       : len(rekomendasi),
             'big_o'        : 'O(V+E) BFS graf ko-pinjam',
         }
+    # ----------------------------------------------------------
+    # info_graf — statistik graf untuk laporan eksperimen
+    # Big-O Waktu : O(V + E)
+    # ----------------------------------------------------------
+    def info_graf(self) -> dict:
+        return self._graf.info_graf()
