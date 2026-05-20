@@ -116,3 +116,25 @@ def test_tampilkan_antrian_urutan_benar():
 def test_tampilkan_antrian_kosong_kembalikan_list_kosong():
     q = Queue()
     assert q.tampilkan_antrian() == []
+
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 5 — kasus edge & skenario realistis perpustakaan
+# ══════════════════════════════════════════════════════════════
+
+def test_enqueue_setelah_queue_sempat_kosong():
+    # Queue boleh diisi lagi setelah dikosongkan sepenuhnya
+    # Ini penting: pointer tail harus reset dengan benar saat kosong
+    q = buat_queue('NIM-001')
+    q.dequeue()                # queue jadi kosong
+    q.enqueue('NIM-002')      # isi lagi
+    assert q.peek() == 'NIM-002'
+    assert len(q) == 1
+
+
+def test_enqueue_banyak_elemen_sekaligus():
+    # simulasi 50 anggota antri untuk buku populer
+    q = Queue()
+    for i in range(1, 51):
+        q.enqueue(f'NIM-{i:03d}')
+    assert len(q) == 50
+    assert q.peek() == 'NIM-001'   # yang pertama antri harus di depan
