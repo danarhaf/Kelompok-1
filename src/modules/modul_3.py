@@ -160,3 +160,24 @@ class ManajerKatalog:
             'pesan'           : pesan,
             'big_o'           : 'O(log n) BST search + update, O(1) dequeue antrian',
         }
+
+    # ----------------------------------------------------------
+    # undo_pinjam — balik efek transaksi PINJAM (dipanggil modul undo)
+    # Big-O Waktu : O(log n)
+    # ----------------------------------------------------------
+    def undo_pinjam(self, isbn: str) -> bool:
+        """
+        Kembalikan status buku ke TERSEDIA setelah undo PINJAM.
+        Dipanggil oleh handler BATALKAN_TERAKHIR di main().
+        """
+        return self._bst.update_status(isbn, STATUS['TERSEDIA'])   # O(log n)
+
+    # ----------------------------------------------------------
+    # undo_kembalikan — balik efek transaksi KEMBALIKAN
+    # Big-O Waktu : O(log n)
+    # ----------------------------------------------------------
+    def undo_kembalikan(self, isbn: str) -> bool:
+        """
+        Kembalikan status buku ke DIPINJAM setelah undo KEMBALIKAN.
+        """
+        return self._bst.update_status(isbn, STATUS['DIPINJAM'])   # O(log n)
