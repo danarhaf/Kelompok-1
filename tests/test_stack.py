@@ -79,4 +79,24 @@ def test_stack_kosong_setelah_semua_dipop():
     s = buat_stack('x', 'y', 'z')
     s.pop(); s.pop(); s.pop()
     assert s.is_empty() is True
-    assert len(s) == 0    
+    assert len(s) == 0   
+
+ 
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 3 — peek (tidak merusak tumpukan)
+# ══════════════════════════════════════════════════════════════
+
+def test_peek_tidak_menghapus_elemen():
+    s = buat_stack('TX-001', 'TX-002')
+    hasil = s.peek()
+    assert hasil == 'TX-002'      # top = yang terakhir di-push
+    assert len(s) == 2            # ukuran tidak boleh berubah
+
+
+def test_peek_selalu_menunjuk_top():
+    s = buat_stack(1, 2, 3)
+    assert s.peek() == 3
+    s.pop()
+    assert s.peek() == 2
+    s.pop()
+    assert s.peek() == 1
