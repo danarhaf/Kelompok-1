@@ -141,3 +141,15 @@ class GraphRekBuku:
     # ----------------------------------------------------------
     def tetangga(self, isbn):
         return self._adj.get(isbn, [])
+        # ----------------------------------------------------------
+    # info_graf — statistik dasar graf (untuk laporan eksperimen)
+    # Big-O Waktu : O(V + E)
+    # ----------------------------------------------------------
+    def info_graf(self):
+        total_vertex = len(self._adj)
+        total_edge = sum(len(v) for v in self._adj.values()) // 2
+        derajat_rata = (
+            sum(len(v) for v in self._adj.values()) / total_vertex
+            if total_vertex > 0 else 0
+        )
+        return {
