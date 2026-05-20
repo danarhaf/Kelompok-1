@@ -45,3 +45,18 @@ class ManajerAntrian:
         for isbn in daftar_isbn:
             if isbn not in self._antrian:
                 self._antrian[isbn] = Queue()
+
+    # ----------------------------------------------------------
+    # pesan
+    # Anggota (nim) memesan buku (isbn) yang sedang dipinjam.
+    # Big-O Waktu : O(1) — enqueue ke tail Queue
+    # Big-O Ruang : O(1) — satu node baru
+    # ----------------------------------------------------------
+    def pesan(self, isbn: str, nim: str) -> dict:
+        """
+        Masukkan nim ke antrian buku isbn.
+        Kembalikan dict hasil operasi untuk ditampilkan CLI.
+        """
+        # pastikan slot ada meski isbn belum terdaftar
+        if isbn not in self._antrian:
+            self._antrian[isbn] = Queue()
