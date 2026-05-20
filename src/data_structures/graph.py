@@ -93,3 +93,20 @@ class GraphRekBuku:
 
         while not antrian.is_empty():
             isbn_kini, hop_kini, bobot_kumulatif = antrian.dequeue()
+            
+            # jelajahi semua tetangga node saat ini
+            for isbn_tetangga, bobot_edge in self._adj.get(isbn_kini, []):
+
+                if isbn_tetangga in dikunjungi:
+                    continue   # sudah dikunjungi, lewati
+
+                # filter berdasarkan min_bobot
+                if bobot_edge < min_bobot:
+                    continue
+
+                dikunjungi.add(isbn_tetangga)
+                hop_baru = hop_kini + 1
+                bobot_baru = bobot_kumulatif + bobot_edge
+
+                # catat sebagai rekomendasi (bukan sumber sendiri)
+                hasil.append((isbn_tetangga, bobot_baru, hop_baru))
