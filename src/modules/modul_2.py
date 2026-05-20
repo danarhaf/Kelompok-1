@@ -35,3 +35,26 @@ class ManajerRiwayat:
     def __init__(self):
         self._stack    = Stack()
         self._tx_counter = 0   # counter transaksi, naik terus
+
+    # ----------------------------------------------------------
+    # catat
+    # Rekam satu transaksi ke atas stack.
+    # Big-O Waktu : O(1) — push ke top Stack
+    # Big-O Ruang : O(1) — satu node baru
+    # ----------------------------------------------------------
+    def catat(self, aksi: str, nim: str, isbn: str, durasi: int = 14) -> int:
+        """
+        Simpan transaksi ke stack dan kembalikan tx_id-nya.
+        Dipanggil setelah operasi BST berhasil (modul_3).
+        """
+        self._tx_counter += 1
+        transaksi = {
+            'tx_id' : self._tx_counter,
+            'aksi'  : aksi,
+            'nim'   : nim,
+            'isbn'  : isbn,
+            'waktu' : time.time(),
+            'durasi': durasi,
+        }
+        self._stack.push(transaksi)   # O(1)
+        return self._tx_counter
