@@ -110,3 +110,27 @@ class GraphRekBuku:
 
                 # catat sebagai rekomendasi (bukan sumber sendiri)
                 hasil.append((isbn_tetangga, bobot_baru, hop_baru))
+                      # lanjut BFS ke level berikutnya jika belum maks hop
+                if hop_baru < max_hop:
+                    antrian.enqueue((isbn_tetangga, hop_baru, bobot_baru))
+
+        # urutkan berdasarkan bobot total turun (yang paling sering ko-pinjam duluan)
+        # menggunakan insertion sort manual agar tidak pakai sorted() bawaan
+        hasil = self._insertion_sort_turun(hasil)
+        return hasil
+
+    def _insertion_sort_turun(self, data):
+        """
+        Insertion sort pada list of tuple berdasarkan elemen index-1 (bobot) secara menurun.
+        Big-O Waktu : O(k^2) — k = jumlah kandidat rekomendasi (biasanya kecil)
+        Dipilih karena k relatif kecil dibanding n buku total.
+        """
+        for i in range(1, len(data)):
+            kunci = data[i]
+            j = i - 1
+            # geser elemen dengan bobot lebih kecil ke kanan
+            while j >= 0 and data[j][1] < kunci[1]:
+                data[j + 1] = data[j]
+                j -= 1
+            data[j + 1] = kunci
+        return data
