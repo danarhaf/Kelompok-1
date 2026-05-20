@@ -137,3 +137,21 @@ class ManajerRekomendasi:
     # ----------------------------------------------------------
     def info_graf(self) -> dict:
         return self._graf.info_graf()
+    # ----------------------------------------------------------
+    # format_rekomendasi — ubah hasil rekomendasikan ke string CLI
+    # ----------------------------------------------------------
+    @staticmethod
+    def format_rekomendasi(hasil: dict) -> str:
+        """Kembalikan string siap cetak untuk perintah REKOMENDASI."""
+        baris = [f"[REKOMENDASI] Buku yang sering dipinjam bersama {hasil['isbn_sumber']}:"]
+        if not hasil['rekomendasi']:
+            baris.append('  (belum ada data ko-pinjam untuk buku ini)')
+        else:
+            for i, item in enumerate(hasil['rekomendasi'], 1):
+                baris.append(
+                    f"  {i}. {item['isbn']} | {item['judul'][:30]:<30} "
+                    f"| Bobot: {item['bobot']} | Hop: {item['hop']} "
+                    f"| {item['status']}"
+                )
+        baris.append(f"  Big-O: {hasil['big_o']}")
+        return '\n'.join(baris)
