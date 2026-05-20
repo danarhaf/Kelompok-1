@@ -63,3 +63,41 @@ def test_tambah_vertex_duplikat_tidak_dobel():
     g.tambah_vertex('ISBN-0001')
     g.tambah_vertex('ISBN-0001')   # panggil dua kali
     assert g.info_graf()['vertex'] == 1
+    def test_add_copinjam_menambah_dua_vertex():
+    g = GraphRekBuku()
+    g.add_copinjam('ISBN-0001', 'ISBN-0002')
+    assert g.info_graf()['vertex'] == 2
+    assert g.info_graf()['edge'] == 1
+
+
+def test_add_copinjam_graf_tidak_berarah():
+    # edge (A,B) harus muncul di tetangga A dan di tetangga B
+    g = GraphRekBuku()
+    g.add_copinjam('ISBN-0001', 'ISBN-0002')
+    tetangga_1 = [isbn for isbn, _ in g.tetangga('ISBN-0001')]
+    tetangga_2 = [isbn for isbn, _ in g.tetangga('ISBN-0002')]
+    assert 'ISBN-0002' in tetangga_1
+    assert 'ISBN-0001' in tetangga_2
+
+
+def test_bobot_naik_saat_dipinjam_bersama_lagi():
+    # setiap kali add_copinjam dipanggil untuk pasangan yang sama,
+    # bobot edge harus naik 1, bukan menambah edge baru
+    g = GraphRekBuku()
+    g.add_copinjam('ISBN-0001', 'ISBN-0002')
+    g.add_copinjam('ISBN-0001', 'ISBN-0002')
+    g.add_copinjam('ISBN-0001', 'ISBN-0002')
+
+    # harus tetap 1 edge, bukan 3
+    assert g.info_graf()['edge'] == 1
+
+    # bobot harus 3
+    bobot = next(b for isbn, b in g.tetangga('ISBN-0001') if isbn == 'ISBN-0002')
+    assert bobot == 3
+
+
+def test_self_loop_diabaikan():
+    # add_copinjam dengan isbn yang sama tidak boleh membuat edge
+    g = GraphRekBuku()
+    g.add_copinjam('ISBN-0001', 'ISBN-0001')
+    assert g.info_graf()['edge'] == 0
