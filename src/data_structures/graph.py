@@ -48,3 +48,17 @@ class GraphRekBuku:
         # graf tidak berarah: update kedua sisi
         self._adj[isbn_a] = self._update_bobot(self._adj[isbn_a], isbn_b)
         self._adj[isbn_b] = self._update_bobot(self._adj[isbn_b], isbn_a)
+            def _update_bobot(self, daftar_tetangga, isbn_target):
+        """
+        Cari isbn_target di daftar_tetangga dan naikkan bobotnya +1.
+        Jika belum ada, tambahkan entry baru dengan bobot 1.
+        Big-O: O(deg) — linear terhadap jumlah tetangga node ini
+        """
+        for i, (tetangga, bobot) in enumerate(daftar_tetangga):
+            if tetangga == isbn_target:
+                # sudah ada — naikkan frekuensi
+                daftar_tetangga[i] = (tetangga, bobot + 1)
+                return daftar_tetangga
+        # belum ada — tambahkan edge baru
+        daftar_tetangga.append((isbn_target, 1))
+        return daftar_tetangga
