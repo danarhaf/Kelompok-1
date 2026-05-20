@@ -271,3 +271,38 @@ class CLI:
 
         print(f'  Big-O: O(1) stack pop + O(log n) BST update')
 
+
+    # ----------------------------------------------------------
+    # REKOMENDASI <isbn>
+    # Big-O: O(V+E) BFS
+    # ----------------------------------------------------------
+    def _handle_rekomendasi(self, token):
+        if len(token) < 2:
+            print('[ERROR] Penggunaan: REKOMENDASI <isbn>')
+            return
+        isbn = token[1].upper()
+
+        hasil = self._rekomendasi.rekomendasikan(
+            isbn, max_hop=2, min_bobot=1,
+            manajer_katalog=self._katalog
+        )
+        print(ManajerRekomendasi.format_rekomendasi(hasil))
+
+    # ----------------------------------------------------------
+    # ANTRIAN <isbn>
+    # Big-O: O(k) traversal antrian
+    # ----------------------------------------------------------
+    def _handle_antrian(self, token):
+        if len(token) < 2:
+            print('[ERROR] Penggunaan: ANTRIAN <isbn>')
+            return
+        isbn = token[1].upper()
+        info = self._antrian.lihat_antrian(isbn)
+
+        print(f'[ANTRIAN] {isbn} — {info["panjang"]} anggota mengantri:')
+        if not info['antrian']:
+            print('  (kosong)')
+        else:
+            for i, nim in enumerate(info['antrian'], 1):
+                print(f'  {i}. {nim}')
+        print(f'  Big-O: {info["big_o"]}')
