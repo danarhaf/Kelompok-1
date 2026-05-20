@@ -43,7 +43,7 @@ def test_peek_queue_kosong_kembalikan_none():
     q = Queue()
     assert q.peek() is None
 
-    
+
 
 # ══════════════════════════════════════════════════════════════
 # KELOMPOK 2 — operasi dasar enqueue & dequeue
@@ -63,3 +63,24 @@ def test_urutan_fifo_terjaga():
     assert q.dequeue() == 'A'
     assert q.dequeue() == 'B'
     assert q.dequeue() == 'C'
+
+def test_size_bertambah_setiap_enqueue():
+    q = Queue()
+    for i in range(5):
+        q.enqueue(i)
+        assert len(q) == i + 1   # ukuran harus naik tepat 1 setiap kali
+
+
+def test_size_berkurang_setiap_dequeue():
+    q = buat_queue(10, 20, 30)
+    for sisa in [2, 1, 0]:
+        q.dequeue()
+        assert len(q) == sisa
+
+
+def test_queue_kosong_setelah_semua_didequeue():
+    q = buat_queue('x', 'y')
+    q.dequeue()
+    q.dequeue()
+    assert q.is_empty() is True
+    assert len(q) == 0
