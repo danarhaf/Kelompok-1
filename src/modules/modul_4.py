@@ -61,3 +61,23 @@ class ManajerRekomendasi:
         """
         if nim in self._sesi_aktif and isbn in self._sesi_aktif[nim]:
             self._sesi_aktif[nim].remove(isbn)   # O(k)
+                # ----------------------------------------------------------
+    # catat_pinjam — tambahkan isbn ke sesi aktif anggota
+    # dan langsung update edge ko-pinjam dengan buku sebelumnya.
+    # Big-O Waktu : O(k * deg) — k = buku aktif anggota ini
+    # ----------------------------------------------------------
+    def catat_pinjam(self, nim: str, isbn: str):
+        """
+        Dipanggil setiap kali PINJAM berhasil (dari main/modul_3).
+        Buku baru langsung dipasangkan dengan semua buku yang
+        sedang dipinjam oleh anggota yang sama.
+        """
+        # pastikan slot sesi ada
+        if nim not in self._sesi_aktif:
+            self._sesi_aktif[nim] = []
+
+        # buat edge ko-pinjam dengan semua buku aktif anggota ini
+        for isbn_lain in self._sesi_aktif[nim]:
+            self._graf.add_copinjam(isbn, isbn_lain)   # O(deg)
+
+        self._sesi_aktif[nim].append(isbn)
