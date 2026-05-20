@@ -30,3 +30,23 @@ class ManajerRekomendasi:
         # sesi_aktif: lacak buku yang sedang dipinjam per anggota
         # dipakai untuk generate edge ko-pinjam
         self._sesi_aktif: dict[str, list[str]] = {}
+        # ----------------------------------------------------------
+    # catat_pinjam — tambahkan isbn ke sesi aktif anggota
+    # dan langsung update edge ko-pinjam dengan buku sebelumnya.
+    # Big-O Waktu : O(k * deg) — k = buku aktif anggota ini
+    # ----------------------------------------------------------
+    def catat_pinjam(self, nim: str, isbn: str):
+        """
+        Dipanggil setiap kali PINJAM berhasil (dari main/modul_3).
+        Buku baru langsung dipasangkan dengan semua buku yang
+        sedang dipinjam oleh anggota yang sama.
+        """
+        # pastikan slot sesi ada
+        if nim not in self._sesi_aktif:
+            self._sesi_aktif[nim] = []
+
+        # buat edge ko-pinjam dengan semua buku aktif anggota ini
+        for isbn_lain in self._sesi_aktif[nim]:
+            self._graf.add_copinjam(isbn, isbn_lain)   # O(deg)
+
+        self._sesi_aktif[nim].append(isbn)
