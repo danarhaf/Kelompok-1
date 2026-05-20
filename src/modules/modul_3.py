@@ -181,3 +181,51 @@ class ManajerKatalog:
         Kembalikan status buku ke DIPINJAM setelah undo KEMBALIKAN.
         """
         return self._bst.update_status(isbn, STATUS['DIPINJAM'])   # O(log n)
+
+    # ----------------------------------------------------------
+    # katalog_semua — tampilkan semua buku terurut ISBN (inorder)
+    # Big-O Waktu : O(n)
+    # ----------------------------------------------------------
+    def katalog_semua(self) -> list[Buku]:
+        """Kembalikan list Buku terurut ISBN untuk perintah KATALOG."""
+        return self._bst.inorder()   # O(n)
+
+    # ----------------------------------------------------------
+    # hapus_buku — hapus buku dari katalog (buku rusak/hilang)
+    # Big-O Waktu : O(log n)
+    # ----------------------------------------------------------
+    def hapus_buku(self, isbn: str) -> dict:
+        berhasil = self._bst.delete(isbn)   # O(log n)
+        if berhasil:
+            return {
+                'berhasil': True,
+                'pesan'   : f'[KATALOG] Buku {isbn} dihapus dari katalog.',
+                'big_o'   : 'O(log n) BST delete',
+            }
+        return {
+            'berhasil': False,
+            'pesan'   : f'[KATALOG] Buku {isbn} tidak ditemukan.',
+            'big_o'   : 'O(log n) BST delete',
+        }
+
+    # ----------------------------------------------------------
+    # info_bst — statistik BST untuk laporan eksperimen
+    # Big-O Waktu : O(n)
+    # ----------------------------------------------------------
+    def info_bst(self) -> dict:
+        return {
+            'jumlah_buku': len(self._bst),
+            'tinggi'     : self._bst.hitung_tinggi(),
+        }
+
+    # ----------------------------------------------------------
+    # _format_buku — helper string satu buku untuk CLI
+    # ----------------------------------------------------------
+    @staticmethod
+    def _format_buku(buku: Buku) -> str:
+        label = LABEL_STATUS.get(buku.status, '?')
+        return (f"  ISBN     : {buku.isbn}\n"
+                f"  Judul    : {buku.judul}\n"
+                f"  Pengarang: {buku.pengarang}\n"
+                f"  Kategori : {buku.kategori}\n"
+                f"  Status   : {label}")
