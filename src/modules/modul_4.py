@@ -100,3 +100,20 @@ class ManajerRekomendasi:
                        max_hop: int = 2,
                        min_bobot: int = 1,
                        manajer_katalog=None) -> dict:
+                """
+        Rekomendasikan buku yang sering dipinjam bersama isbn.
+        Jika manajer_katalog diberikan, sertakan info judul buku.
+        Kembalikan dict berisi list rekomendasi + info Big-O.
+        """
+        hasil_bfs = self._graf.rekomendasikan(isbn, max_hop, min_bobot)
+        # hasil_bfs: list of (isbn_rek, bobot, hop)
+
+        rekomendasi = []
+        for isbn_rek, bobot, hop in hasil_bfs:
+            item = {
+                'isbn'  : isbn_rek,
+                'bobot' : bobot,
+                'hop'   : hop,
+                'judul' : '-',
+                'status': '-',
+            }
