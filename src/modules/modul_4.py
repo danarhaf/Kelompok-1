@@ -117,3 +117,17 @@ class ManajerRekomendasi:
                 'judul' : '-',
                 'status': '-',
             }
+ # tambahkan info judul dari BST jika katalog tersedia
+            if manajer_katalog is not None:
+                hasil_cari = manajer_katalog.cari_buku(isbn_rek)
+                if hasil_cari['berhasil']:
+                    item['judul']  = hasil_cari['buku'].judul
+                    item['status'] = hasil_cari['status']
+            rekomendasi.append(item)
+
+        return {
+            'isbn_sumber'  : isbn,
+            'rekomendasi'  : rekomendasi,
+            'jumlah'       : len(rekomendasi),
+            'big_o'        : 'O(V+E) BFS graf ko-pinjam',
+        }
