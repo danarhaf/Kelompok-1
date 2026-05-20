@@ -138,3 +138,36 @@ def test_enqueue_banyak_elemen_sekaligus():
         q.enqueue(f'NIM-{i:03d}')
     assert len(q) == 50
     assert q.peek() == 'NIM-001'   # yang pertama antri harus di depan
+
+def test_dequeue_sampai_habis_lalu_cek_tail_reset():
+    # Setelah dequeue semua, enqueue lagi harus tetap benar
+    q = buat_queue('X', 'Y', 'Z')
+    q.dequeue()
+    q.dequeue()
+    q.dequeue()
+    # pastikan tail juga sudah None (bukan masih menunjuk node lama)
+    q.enqueue('NEW')
+    assert q.peek() == 'NEW'
+    assert len(q) == 1
+
+
+def test_antrian_per_isbn_independen():
+    # Setiap ISBN punya queue sendiri, tidak saling mengganggu
+    antrian = {
+        'ISBN-0001': buat_queue('NIM-001', 'NIM-002'),
+        'ISBN-0002': buat_queue('NIM-003'),
+    }
+    # dequeue dari ISBN-0001 tidak boleh mempengaruhi ISBN-0002
+    antrian['ISBN-0001'].dequeue()
+    assert len(antrian['ISBN-0001']) == 1
+    assert len(antrian['ISBN-0002']) == 1
+
+
+def test_tipe_data_beragam_bisa_masuk_queue():
+    # Queue tidak spesifik tipe — string, int, dict semua boleh
+    q = Queue()
+    q.enqueue('NIM-001')
+    q.enqueue(42)
+    q.enqueue({'isbn': 'ISBN-0001', 'nim': 'NIM-005'})
+    assert len(q) == 3
+    assert q.dequeue() == 'NIM-001'
