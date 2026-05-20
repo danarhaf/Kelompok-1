@@ -95,3 +95,17 @@ class ManajerRiwayat:
         Tidak mengubah isi stack.
         """
         return self._stack.tampilkan_stack()   # O(n)
+    
+    # ----------------------------------------------------------
+    # archiving — pindah transaksi lama ke list arsip
+    # agar stack tidak tumbuh tak terbatas.
+    # Big-O Waktu : O(n) — lihat stack.pindah_ke_linked_list
+    # Relevan untuk Pertanyaan Analisis no. 4
+    # ----------------------------------------------------------
+    def archiving(self, maks_simpan: int = 100) -> list[dict]:
+        """
+        Jika stack melebihi maks_simpan, elemen lama dipindah
+        ke list arsip dan dikembalikan ke pemanggil.
+        Stack tetap menyimpan maks_simpan transaksi terbaru.
+        """
+        return self._stack.pindah_ke_linked_list(maks_simpan)   # O(n)
