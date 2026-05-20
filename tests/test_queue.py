@@ -171,3 +171,25 @@ def test_tipe_data_beragam_bisa_masuk_queue():
     q.enqueue({'isbn': 'ISBN-0001', 'nim': 'NIM-005'})
     assert len(q) == 3
     assert q.dequeue() == 'NIM-001'
+
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 6 — skala besar (beban 500 operasi)
+# ══════════════════════════════════════════════════════════════
+
+def test_500_operasi_campuran():
+    """
+    Tes beban: 500 enqueue lalu 500 dequeue.
+    Memastikan tidak ada memory leak atau pointer rusak pada skala besar.
+    Big-O total: O(n) — setiap operasi O(1)
+    """
+    q = Queue()
+    n = 500
+    for i in range(n):
+        q.enqueue(i)
+    assert len(q) == n
+
+    for i in range(n):
+        nilai = q.dequeue()
+        assert nilai == i   # urutan FIFO harus terjaga
+
+    assert q.is_empty() is True
