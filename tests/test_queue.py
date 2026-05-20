@@ -11,3 +11,12 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 from data_structures.queue_ll import Queue
+
+
+# ── helper ────────────────────────────────────────────────────
+def buat_queue(*items):
+    """Buat Queue dan langsung isi dengan items yang diberikan."""
+    q = Queue()
+    for item in items:
+        q.enqueue(item)
+    return q
