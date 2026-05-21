@@ -36,22 +36,22 @@ BANNER = """
 """
 
 BANTUAN = """
-┌─────────────────────────────────────────────────────────┐
-│  DAFTAR PERINTAH                          Big-O          │
-├─────────────────────────────────────────────────────────┤
-│  CARI_BUKU <isbn>                         O(log n)       │
-│  PINJAM <nim> <isbn>                      O(log n)       │
-│  KEMBALIKAN <isbn>                        O(log n)       │
-│  PESAN <nim> <isbn>                       O(1) enqueue   │
-│  BATALKAN_PESAN <nim> <isbn>              O(k) rebuild   │
-│  BATALKAN_TERAKHIR                        O(1) pop       │
-│  REKOMENDASI <isbn>                       O(V+E) BFS     │
-│  ANTRIAN <isbn>                           O(k) traversal │
-│  KATALOG                                  O(n) inorder   │
-│  LAPORAN_BULAN                            O(n^1.5)/O(nlogn)│
-│  BANTUAN                                  O(1)           │
-│  KELUAR                                   -              │
-└─────────────────────────────────────────────────────────┘
+┌────────────────────────────────┐────────────────────────────┐
+│  DAFTAR PERINTAH               │           Big-O            │
+├────────────────────────────────│────────────────────────────┤
+│  CARI_BUKU <isbn>              │           O(log n)         │
+│  PINJAM <nim> <isbn>           │           O(log n)         │
+│  KEMBALIKAN <isbn>             │           O(log n)         │
+│  PESAN <nim> <isbn>            │           O(1) enqueue     │
+│  BATALKAN_PESAN <nim> <isbn>   │           O(k) rebuild     │
+│  BATALKAN_TERAKHIR             │           O(1) pop         │
+│  REKOMENDASI <isbn>            │           O(V+E) BFS       │
+│  ANTRIAN <isbn>                │           O(k) traversal   │
+│  KATALOG                       │           O(n) inorder     │
+│  LAPORAN_BULAN                 │           O(n^1.5)/O(nlogn)│
+│  BANTUAN                       │           O(1)             │
+│  KELUAR                        │           -                │
+└────────────────────────────────└────────────────────────────┘
 """
 
 
