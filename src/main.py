@@ -111,3 +111,7 @@ def test_mode():
     isbn_list = [b.isbn for b in manajer_katalog.katalog_semua()]
     assert isbn_list == sorted(isbn_list), 'Inorder BST harus terurut'
 
+    # verifikasi update status
+    ok = manajer_katalog._bst.update_status('ISBN-0001', STATUS['DIPINJAM'])
+    assert ok is True, 'update_status harus berhasil'
+    manajer_katalog._bst.update_status('ISBN-0001', STATUS['TERSEDIA'])
