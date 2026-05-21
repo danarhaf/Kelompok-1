@@ -77,3 +77,62 @@ def buat_buku(isbn: str) -> Buku:
         kategori='Teknik',
         status=STATUS['TERSEDIA'],
     )
+
+# ════════════════════════════════════════════════════════════
+# 4. BENCHMARK GRAPH (BFS)
+# Operasi: add_copinjam O(deg), BFS O(V+E)
+# ════════════════════════════════════════════════════════════
+
+def benchmark_graph(ukuran_list: list) -> list:
+    print('\n[GRAPH] Memulai benchmark...')
+    hasil = []
+
+    for n in ukuran_list:
+        isbn_list = [f'ISBN-{i:04d}' for i in range(1, n + 1)]
+
+        # buat pasangan ko-pinjam acak sebanyak n*2 transaksi
+        pasangan = []
+        for _ in range(n * 2):
+            a, b = random.sample(isbn_list, 2)
+            pasangan.append((a, b))
+
+        # ── add_copinjam ──────────────────────────────────
+        def uji_add(pasangan=pasangan):
+            g = GraphRekBuku()
+            for a, b in pasangan:
+                g.add_copinjam(a, b)
+
+        t_add = ukur_waktu(uji_add)
+
+        # ── BFS rekomendasi ───────────────────────────────
+        g_penuh = GraphRekBuku()
+        for a, b in pasangan:
+            g_penuh.add_copinjam(a, b)
+
+        sumber = isbn_list[0]
+
+        def uji_bfs(g_penuh=g_penuh, sumber=sumber):
+            g_penuh.rekomendasikan(sumber, max_hop=2)
+
+        t_bfs = ukur_waktu(uji_bfs, ulang=10)
+
+        info = g_penuh.info_graf()
+
+        hasil.append([
+            n,
+            info['vertex'],
+            info['edge'],
+            f'{info["derajat_rata_rata"]:.2f}',
+            f'{t_add:.6f}',
+            f'{t_bfs:.6f}',
+        ])
+
+    cetak_tabel(
+        'GRAPH — add_copinjam & BFS rekomendasi (rata-rata 5 ulangan)',
+        ['N buku', 'V', 'E', 'deg rata-rata',
+         'add_copinjam N*2 (s)', 'BFS O(V+E) (s)'],
+        hasil,
+    )
+    print('  Catatan: BFS O(V+E), makin banyak edge makin lama')
+    print('  Relevan untuk Pertanyaan Analisis no. 3')
+    return hasil
