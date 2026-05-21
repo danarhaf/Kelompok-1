@@ -20,7 +20,7 @@ class ManajerRekomendasi:
     lalu menyajikan rekomendasi via BFS saat diminta CLI.
 
     Riwayat pinjam per anggota disimpan di _sesi_aktif:
-      { nim -> [isbn, isbn, ...] }
+    { nim -> [isbn, isbn, ...] }
     Setiap kali sesi ditutup (anggota selesai pinjam),
     semua pasangan buku di sesi itu dicatat ke graf.
     """
