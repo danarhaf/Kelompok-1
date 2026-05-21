@@ -361,3 +361,71 @@ def benchmark_sorting(ukuran_list: list) -> list:
     print('  Catatan: Merge Sort lebih konsisten O(n log n),')
     print('  Shell Sort lebih cepat untuk data hampir terurut.')
     return hasil
+
+# ════════════════════════════════════════════════════════════
+# 6. BENCHMARK INTEGRASI — simulasi 300 event campuran
+# Sesuai parameter sistem: "Operasi CLI minimum 300 event"
+# ════════════════════════════════════════════════════════════
+
+def benchmark_integrasi() -> None:
+    """
+    Simulasi end-to-end 300 event campuran:
+    PINJAM, KEMBALIKAN, PESAN, REKOMENDASI.
+    Mengukur total waktu pipeline sesuai parameter sistem.
+    """
+    print('\n[INTEGRASI] Simulasi 300 event campuran...')
+
+    koleksi  = generate_koleksi(80)
+    bst      = BSTKatalog()
+    antrian  = {b.isbn: Queue() for b in koleksi}
+    stack_tx = Stack()
+    graf     = GraphRekBuku()
+
+    for b in koleksi:
+        bst.insert(b)
+
+    isbn_list = [b.isbn for b in koleksi]
+    nim_list  = [f'NIM-{i:03d}' for i in range(1, 61)]
+    tx_counter = 0
+    sedang_dipinjam = {}
+
+    t_mulai = time.perf_counter()
+
+    for _ in range(300):
+        aksi = random.choice(['PINJAM', 'PINJAM', 'KEMBALIKAN', 'PESAN', 'REKOMENDASI'])
+        isbn = random.choice(isbn_list)
+        nim  = random.choice(nim_list)
+        buku = bst.search(isbn)   # O(log n)
+
+        if aksi == 'PINJAM' and buku and buku.status == STATUS['TERSEDIA']:
+            bst.update_status(isbn, STATUS['DIPINJAM'])   # O(log n)
+            tx_counter += 1
+            stack_tx.push({'tx_id': tx_counter, 'aksi': 'PINJAM',
+                        'nim': nim, 'isbn': isbn, 'durasi': 14,
+                        'waktu': time.time()})           # O(1)
+            sedang_dipinjam[isbn] = nim
+
+        elif aksi == 'KEMBALIKAN' and buku and buku.status == STATUS['DIPINJAM']:
+            pemesan = antrian[isbn].dequeue()              # O(1)
+            status_baru = STATUS['DIPESAN'] if pemesan else STATUS['TERSEDIA']
+            bst.update_status(isbn, status_baru)           # O(log n)
+            tx_counter += 1
+            stack_tx.push({'tx_id': tx_counter, 'aksi': 'KEMBALIKAN',
+                        'nim': nim, 'isbn': isbn, 'durasi': 0,
+                        'waktu': time.time()})           # O(1)
+            sedang_dipinjam.pop(isbn, None)
+
+        elif aksi == 'PESAN' and buku and buku.status == STATUS['DIPINJAM']:
+            antrian[isbn].enqueue(nim)                     # O(1)
+
+        elif aksi == 'REKOMENDASI':
+            graf.rekomendasikan(isbn, max_hop=2)           # O(V+E)
+
+    total = time.perf_counter() - t_mulai
+
+    print(f'  Total 300 event selesai dalam : {total:.4f} detik')
+    print(f'  Transaksi PINJAM/KEMBALIKAN   : {tx_counter}')
+    print(f'  Ukuran Stack akhir            : {len(stack_tx)}')
+    print(f'  Info Graf                     : {graf.info_graf()}')
+    print(f'  Big-O dominan per event       : O(log n) BST + O(1) Stack/Queue')
+
