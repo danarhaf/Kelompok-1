@@ -115,3 +115,9 @@ def test_mode():
     ok = manajer_katalog._bst.update_status('ISBN-0001', STATUS['DIPINJAM'])
     assert ok is True, 'update_status harus berhasil'
     manajer_katalog._bst.update_status('ISBN-0001', STATUS['TERSEDIA'])
+
+    # verifikasi antrian
+    manajer_antrian = ManajerAntrian()
+    manajer_antrian.inisialisasi_antrian([b.isbn for b in koleksi])
+    hasil_pesan = manajer_antrian.pesan('ISBN-0001', 'NIM-001')
+    assert hasil_pesan['berhasil'] is True, 'Pesan ke antrian harus berhasil'
