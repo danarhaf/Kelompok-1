@@ -165,3 +165,80 @@ def benchmark_stack(ukuran_list: list) -> list:
         hasil,
     )
     return hasil
+
+# ════════════════════════════════════════════════════════════
+# 3. BENCHMARK BST
+# Operasi: insert O(log n), search O(log n), inorder O(n)
+# Dua skenario: data acak (rata-rata) & data terurut (worst-case)
+# ════════════════════════════════════════════════════════════
+
+def benchmark_bst(ukuran_list: list) -> list:
+    print('\n[BST] Memulai benchmark...')
+    hasil = []
+
+    for n in ukuran_list:
+        isbn_urut = [f'ISBN-{i:04d}' for i in range(1, n + 1)]
+        isbn_acak = isbn_urut.copy()
+        random.shuffle(isbn_acak)
+
+        # ── insert acak (rata-rata case) ──────────────────
+        def uji_insert_acak(isbn_acak=isbn_acak):
+            pohon = BSTKatalog()
+            for isbn in isbn_acak:
+                pohon.insert(buat_buku(isbn))
+
+        t_insert_acak = ukur_waktu(uji_insert_acak)
+
+        # ── insert terurut (worst-case: pohon miring) ─────
+        def uji_insert_urut(isbn_urut=isbn_urut):
+            pohon = BSTKatalog()
+            for isbn in isbn_urut:
+                pohon.insert(buat_buku(isbn))
+
+        t_insert_urut = ukur_waktu(uji_insert_urut)
+
+        # ── search pada pohon acak ────────────────────────
+        pohon_acak = BSTKatalog()
+        for isbn in isbn_acak:
+            pohon_acak.insert(buat_buku(isbn))
+
+        isbn_cari = isbn_acak[n // 2]
+
+        def uji_search(pohon_acak=pohon_acak, isbn_cari=isbn_cari):
+            pohon_acak.search(isbn_cari)
+
+        t_search = ukur_waktu(uji_search, ulang=20)
+
+        # ── inorder O(n) ──────────────────────────────────
+        def uji_inorder(pohon_acak=pohon_acak):
+            pohon_acak.inorder()
+
+        t_inorder = ukur_waktu(uji_inorder)
+
+        # tinggi pohon untuk bukti empiris O(log n) vs O(n)
+        pohon_urut = BSTKatalog()
+        for isbn in isbn_urut:
+            pohon_urut.insert(buat_buku(isbn))
+
+        tinggi_acak = pohon_acak.hitung_tinggi()
+        tinggi_urut = pohon_urut.hitung_tinggi()
+
+        hasil.append([
+            n,
+            f'{t_insert_acak:.6f}',
+            f'{t_insert_urut:.6f}',
+            f'{t_search:.6f}',
+            f'{t_inorder:.6f}',
+            tinggi_acak,
+            tinggi_urut,
+        ])
+
+    cetak_tabel(
+        'BST — insert / search / inorder (rata-rata 5 ulangan)',
+        ['N', 'insert acak (s)', 'insert urut (s)',
+        'search (s)', 'inorder (s)', 'tinggi acak', 'tinggi urut'],
+        hasil,
+    )
+    print('  Catatan: tinggi acak ≈ O(log n), tinggi urut = O(n) [worst-case]')
+    print('  Relevan untuk Pertanyaan Analisis no. 1')
+    return hasil
