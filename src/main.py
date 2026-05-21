@@ -132,3 +132,10 @@ def test_mode():
 
     print('[TEST] Semua assertions lulus. Sistem siap.')
     print(f'[TEST] Info BST: {manajer_katalog.info_bst()}')
+
+if __name__ == '__main__':
+    # cek apakah dijalankan dalam mode test (oleh CI)
+    if '--test' in sys.argv:
+        test_mode()
+    else:
+        main()
