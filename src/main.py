@@ -87,3 +87,27 @@ def main():
     )
 
     cli.jalankan()
+
+# ── mode --test untuk GitHub Actions CI ───────────────────────
+# dipanggil oleh ci.yml: python src/main.py --test
+# hanya verifikasi startup tanpa masuk loop CLI interaktif
+
+def test_mode():
+    """
+    Verifikasi bahwa semua modul bisa diimport dan diinisialisasi
+    tanpa error. Digunakan oleh GitHub Actions CI.
+    Big-O: O(n log n) — sama dengan startup normal.
+    """
+    print('[TEST] Menjalankan mode test...')
+
+    koleksi = generate_koleksi(80)
+    assert len(koleksi) == 80, 'Jumlah buku harus 80'
+
+    manajer_katalog = ManajerKatalog()
+    manajer_katalog.muat_koleksi(koleksi)
+    assert len(manajer_katalog.katalog_semua()) == 80, 'BST harus berisi 80 buku'
+
+    # verifikasi inorder terurut
+    isbn_list = [b.isbn for b in manajer_katalog.katalog_semua()]
+    assert isbn_list == sorted(isbn_list), 'Inorder BST harus terurut'
+
