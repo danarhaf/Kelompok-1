@@ -16,23 +16,17 @@ from data_structures.graph import GraphRekBuku
 def buat_graf_sederhana():
     """
     Graf kecil untuk sebagian besar tes:
-
-    ISBN-0001 <-> ISBN-0002 (bobot 2)
-    ISBN-0001 <-> ISBN-0003 (bobot 1)
-    ISBN-0002 <-> ISBN-0004 (bobot 3)
+      ISBN-0001 <-> ISBN-0002 (bobot 2)
+      ISBN-0001 <-> ISBN-0003 (bobot 1)
+      ISBN-0002 <-> ISBN-0004 (bobot 3)
     """
-
     g = GraphRekBuku()
-
     g.add_copinjam('ISBN-0001', 'ISBN-0002')
-    g.add_copinjam('ISBN-0001', 'ISBN-0002')   # bobot jadi 2
-
+    g.add_copinjam('ISBN-0001', 'ISBN-0002')   # frekuensi naik jadi 2
     g.add_copinjam('ISBN-0001', 'ISBN-0003')
-
     g.add_copinjam('ISBN-0002', 'ISBN-0004')
     g.add_copinjam('ISBN-0002', 'ISBN-0004')
-    g.add_copinjam('ISBN-0002', 'ISBN-0004')   # bobot jadi 3
-
+    g.add_copinjam('ISBN-0002', 'ISBN-0004')   # bobot ISBN-0002 <-> ISBN-0004 = 3
     return g
 
 
@@ -69,11 +63,11 @@ def test_tambah_vertex_duplikat_tidak_dobel():
     g.tambah_vertex('ISBN-0001')
     g.tambah_vertex('ISBN-0001')   # panggil dua kali
     assert g.info_graf()['vertex'] == 1
-    def test_add_copinjam_menambah_dua_vertex():
-        
-        g = GraphRekBuku()
-        g.add_copinjam('ISBN-0001', 'ISBN-0002')
-        
+
+
+def test_add_copinjam_menambah_dua_vertex():
+    g = GraphRekBuku()
+    g.add_copinjam('ISBN-0001', 'ISBN-0002')
     assert g.info_graf()['vertex'] == 2
     assert g.info_graf()['edge'] == 1
 
@@ -110,6 +104,7 @@ def test_self_loop_diabaikan():
     g.add_copinjam('ISBN-0001', 'ISBN-0001')
     assert g.info_graf()['edge'] == 0
 
+
 # ══════════════════════════════════════════════════════════════
 # KELOMPOK 3 — rekomendasikan (BFS)
 # ══════════════════════════════════════════════════════════════
@@ -124,7 +119,6 @@ def test_rekomendasi_hop1_langsung():
     isbn_hasil = [r[0] for r in hasil]
     assert 'ISBN-0002' in isbn_hasil
     assert 'ISBN-0003' in isbn_hasil
-    
     # ISBN-0004 hanya bisa dicapai lewat ISBN-0002 (hop 2), tidak boleh muncul
     assert 'ISBN-0004' not in isbn_hasil
 
@@ -141,7 +135,6 @@ def test_rekomendasi_hop2_mencakup_tetangga_tetangga():
 
 
 def test_rekomendasi_tidak_menyertakan_sumber():
-    
     # ISBN sumber tidak boleh muncul di hasil rekomendasi
     g = buat_graf_sederhana()
     hasil = g.rekomendasikan('ISBN-0001', max_hop=2)
@@ -150,7 +143,6 @@ def test_rekomendasi_tidak_menyertakan_sumber():
 
 
 def test_rekomendasi_tidak_ada_duplikat():
-    
     # Setiap ISBN hanya boleh muncul sekali di hasil
     g = buat_graf_sederhana()
     hasil = g.rekomendasikan('ISBN-0001', max_hop=2)
@@ -170,12 +162,12 @@ def test_rekomendasi_terurut_bobot_turun():
 
 
 def test_rekomendasi_isbn_terisolasi_kembalikan_kosong():
-    
     # Buku yang tidak punya tetangga tidak bisa direkomendasikan
     g = GraphRekBuku()
     g.tambah_vertex('ISBN-0099')   # vertex ada tapi tidak ada edge
     assert g.rekomendasikan('ISBN-0099') == []
-   
+
+
 def test_rekomendasi_min_bobot_memfilter_edge_lemah():
     """
     Dengan min_bobot=2, edge berbobot 1 (ISBN-0001 <-> ISBN-0003) harus disaring.
@@ -187,7 +179,8 @@ def test_rekomendasi_min_bobot_memfilter_edge_lemah():
     isbn_hasil = [r[0] for r in hasil]
     assert 'ISBN-0003' not in isbn_hasil   # disaring karena bobot=1
     assert 'ISBN-0002' in isbn_hasil       # lolos karena bobot=2
-    
+
+
 # ══════════════════════════════════════════════════════════════
 # KELOMPOK 4 — tetangga & info_graf
 # ══════════════════════════════════════════════════════════════
@@ -206,10 +199,8 @@ def test_tetangga_isbn_tidak_ada_kembalikan_list_kosong():
 def test_info_graf_vertex_dan_edge_benar():
     g = buat_graf_sederhana()
     info = g.info_graf()
-    
     # vertex: ISBN-0001, ISBN-0002, ISBN-0003, ISBN-0004
     assert info['vertex'] == 4
-    
     # edge: (0001,0002), (0001,0003), (0002,0004) = 3 edge
     assert info['edge'] == 3
 
@@ -217,9 +208,9 @@ def test_info_graf_vertex_dan_edge_benar():
 def test_derajat_rata_rata():
     g = buat_graf_sederhana()
     info = g.info_graf()
-    
-# total derajat = 2*E = 6, vertex = 4 -> rata-rata = 1.5
+    # total derajat = 2*E = 6, vertex = 4 -> rata-rata = 1.5
     assert info['derajat_rata_rata'] == 1.5
+
 
 # ══════════════════════════════════════════════════════════════
 # KELOMPOK 5 — skenario realistis perpustakaan
@@ -232,8 +223,7 @@ def test_skenario_anggota_pinjam_dua_buku_bersama():
     Setelah 5 sesi, bobot edge harus mencerminkan frekuensi.
     """
     g = GraphRekBuku()
-    
-# 5 anggota masing-masing pinjam ISBN-0001 dan ISBN-0005 bersama
+    # 5 anggota masing-masing pinjam ISBN-0001 dan ISBN-0005 bersama
     for _ in range(5):
         g.add_copinjam('ISBN-0001', 'ISBN-0005')
 
@@ -254,13 +244,12 @@ def test_bfs_tidak_mengunjungi_node_dua_kali():
     hasil = g.rekomendasikan('ISBN-0001', max_hop=2)
     isbn_hasil = [r[0] for r in hasil]
 
-# tidak ada duplikat meski ada siklus
+    # tidak ada duplikat meski ada siklus
     assert len(isbn_hasil) == len(set(isbn_hasil))
-    
-# ISBN-0001 (sumber) tidak boleh masuk hasil
+    # ISBN-0001 (sumber) tidak boleh masuk hasil
     assert 'ISBN-0001' not in isbn_hasil
-    
-    
+
+
 # ══════════════════════════════════════════════════════════════
 # KELOMPOK 6 — skala besar (80 buku sesuai parameter sistem)
 # ══════════════════════════════════════════════════════════════
