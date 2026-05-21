@@ -121,3 +121,14 @@ def test_mode():
     manajer_antrian.inisialisasi_antrian([b.isbn for b in koleksi])
     hasil_pesan = manajer_antrian.pesan('ISBN-0001', 'NIM-001')
     assert hasil_pesan['berhasil'] is True, 'Pesan ke antrian harus berhasil'
+
+    # verifikasi stack riwayat
+    manajer_riwayat = ManajerRiwayat()
+    tx_id = manajer_riwayat.catat('PINJAM', 'NIM-001', 'ISBN-0001')
+    assert tx_id == 1, 'tx_id pertama harus 1'
+    tx = manajer_riwayat.batalkan_terakhir()
+    assert tx is not None, 'Stack harus bisa pop'
+    assert tx['aksi'] == 'PINJAM'
+
+    print('[TEST] Semua assertions lulus. Sistem siap.')
+    print(f'[TEST] Info BST: {manajer_katalog.info_bst()}')
