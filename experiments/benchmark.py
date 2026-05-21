@@ -429,3 +429,30 @@ def benchmark_integrasi() -> None:
     print(f'  Info Graf                     : {graf.info_graf()}')
     print(f'  Big-O dominan per event       : O(log n) BST + O(1) Stack/Queue')
 
+
+# ════════════════════════════════════════════════════════════
+# MAIN — jalankan semua benchmark
+# ════════════════════════════════════════════════════════════
+
+if __name__ == '__main__':
+    UKURAN = [20, 80, 300]
+
+    print('=' * 60)
+    print('  BENCHMARK EKSPERIMEN RUNTIME')
+    print('  ELT60213 Algoritma dan Struktur Data')
+    print('  Smart Library Management & Recommendation System')
+    print('  Seed: 13 | Ukuran N:', UKURAN)
+    print('=' * 60)
+
+    benchmark_queue(UKURAN)
+    benchmark_stack(UKURAN)
+    benchmark_bst(UKURAN)
+    benchmark_graph(UKURAN)
+    benchmark_sorting(UKURAN)
+    benchmark_integrasi()
+
+    print('\n' + '=' * 60)
+    print('  Benchmark selesai.')
+    print('  Salin tabel di atas ke Bab V Laporan (Hasil Eksperimen).')
+    print('=' * 60)
+
