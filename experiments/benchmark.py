@@ -77,3 +77,47 @@ def buat_buku(isbn: str) -> Buku:
         kategori='Teknik',
         status=STATUS['TERSEDIA'],
     )
+
+# ════════════════════════════════════════════════════════════
+# 1. BENCHMARK QUEUE
+# Operasi: enqueue O(1), dequeue O(1)
+# ════════════════════════════════════════════════════════════
+
+def benchmark_queue(ukuran_list: list) -> list:
+    print('\n[QUEUE] Memulai benchmark...')
+    hasil = []
+
+    for n in ukuran_list:
+        nim_list = [f'NIM-{i:03d}' for i in range(n)]
+
+        # ── enqueue N elemen ──────────────────────────────
+        def uji_enqueue(nim_list=nim_list):
+            q = Queue()
+            for nim in nim_list:
+                q.enqueue(nim)
+
+        t_enqueue = ukur_waktu(uji_enqueue)
+
+        # ── dequeue N elemen ──────────────────────────────
+        def uji_dequeue(nim_list=nim_list):
+            q = Queue()
+            for nim in nim_list:
+                q.enqueue(nim)
+            while not q.is_empty():
+                q.dequeue()
+
+        t_dequeue = ukur_waktu(uji_dequeue)
+
+        hasil.append([
+            n,
+            f'{t_enqueue:.6f}',
+            f'{t_dequeue:.6f}',
+            'O(1) per op',
+        ])
+
+    cetak_tabel(
+        'QUEUE — enqueue & dequeue (rata-rata 5 ulangan)',
+        ['N', 'enqueue N (s)', 'dequeue N (s)', 'Big-O per operasi'],
+        hasil,
+    )
+    return hasil
