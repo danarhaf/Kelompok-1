@@ -70,3 +70,32 @@ class LinkedList:
             self._tail.next = baru
             self._tail = baru
         self._size += 1
+
+    # ----------------------------------------------------------
+    # hapus_depan — hapus dan kembalikan data dari node pertama
+    # Big-O Waktu : O(1)
+    # Big-O Ruang : O(1)
+    # ----------------------------------------------------------
+    def hapus_depan(self):
+        if self.head is None:
+            return None
+        data_keluar = self.head.data
+        self.head = self.head.next
+        if self.head is None:
+            self._tail = None   # list jadi kosong, reset tail
+        self._size -= 1
+        return data_keluar
+
+    # ----------------------------------------------------------
+    # cari — temukan node dengan data tertentu
+    # Big-O Waktu : O(n) — traversal linear
+    # Big-O Ruang : O(1)
+    # Kembalikan node jika ditemukan, None jika tidak ada
+    # ----------------------------------------------------------
+    def cari(self, data):
+        current = self.head
+        while current is not None:
+            if current.data == data:
+                return current
+            current = current.next
+        return None
