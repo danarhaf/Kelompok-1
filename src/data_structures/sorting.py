@@ -9,7 +9,7 @@
 # Merge Sort  : O(n log n) — sorting frekuensi per ISBN
 # ============================================================
 
-from data_structures.linked_list import Node
+from data_structures.linked_list import LLNode
 
 
 # ════════════════════════════════════════════════════════════
@@ -143,7 +143,7 @@ def _merge_descending(kiri, kanan):
     """
     # sentinel: node dummy sebagai titik awal hasil merge
     # sehingga kita tidak perlu if-else untuk kasus head kosong
-    dummy = Node({'frekuensi': 0})
+    dummy = LLNode({'frekuensi': 0})
     cur = dummy
 
     while kiri is not None and kanan is not None:
