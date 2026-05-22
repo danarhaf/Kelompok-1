@@ -42,3 +42,31 @@ class LinkedList:
         self.head = None
         self._tail = None   # pointer tail agar tambah_belakang O(1)
         self._size = 0
+
+    # ----------------------------------------------------------
+    # tambah_depan — sisipkan node baru di awal list
+    # Big-O Waktu : O(1)
+    # Big-O Ruang : O(1)
+    # ----------------------------------------------------------
+    def tambah_depan(self, data):
+        baru = Node(data)
+        baru.next = self.head
+        self.head = baru
+        if self._tail is None:
+            self._tail = baru   # list tadinya kosong
+        self._size += 1
+
+    # ----------------------------------------------------------
+    # tambah_belakang — sisipkan node baru di akhir list
+    # Big-O Waktu : O(1) — berkat pointer tail
+    # Big-O Ruang : O(1)
+    # ----------------------------------------------------------
+    def tambah_belakang(self, data):
+        baru = Node(data)
+        if self.head is None:
+            self.head = baru
+            self._tail = baru
+        else:
+            self._tail.next = baru
+            self._tail = baru
+        self._size += 1
