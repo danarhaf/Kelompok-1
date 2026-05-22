@@ -23,7 +23,7 @@ class ManajerAntrian:
     Dipanggil oleh CLI (modul_6) dan modul_2 (untuk undo pesan).
 
     Struktur internal:
-      _antrian : { isbn -> Queue of nim }
+    _antrian : { isbn -> Queue of nim }
     """
 
     def __init__(self):
@@ -76,7 +76,7 @@ class ManajerAntrian:
         return {
             'berhasil': True,
             'pesan'   : (f'[ANTRIAN] {nim} berhasil masuk antrian {isbn}. '
-                         f'Posisi ke-{posisi}.'),
+                        f'Posisi ke-{posisi}.'),
             'big_o'   : 'enqueue O(1)',
         }
 

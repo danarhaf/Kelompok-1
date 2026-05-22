@@ -243,7 +243,7 @@ def test_tinggi_pohon_seimbang_sekitar_log_n():
     Insert tidak terurut -> pohon lebih seimbang, tinggi mendekati log2(n).
     """
     urutan_acak = ['ISBN-0040', 'ISBN-0020', 'ISBN-0060',
-                   'ISBN-0010', 'ISBN-0030', 'ISBN-0050', 'ISBN-0070']
+                'ISBN-0010', 'ISBN-0030', 'ISBN-0050', 'ISBN-0070']
     pohon = bst_dengan(*urutan_acak)
     batas = math.ceil(math.log2(len(urutan_acak) + 1))
     assert pohon.hitung_tinggi() <= batas + 1

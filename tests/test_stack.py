@@ -81,7 +81,7 @@ def test_stack_kosong_setelah_semua_dipop():
     assert s.is_empty() is True
     assert len(s) == 0   
 
- 
+
 # ══════════════════════════════════════════════════════════════
 # KELOMPOK 3 — peek (tidak merusak tumpukan)
 # ══════════════════════════════════════════════════════════════

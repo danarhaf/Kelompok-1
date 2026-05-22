@@ -16,9 +16,9 @@ from data_structures.graph import GraphRekBuku
 def buat_graf_sederhana():
     """
     Graf kecil untuk sebagian besar tes:
-      ISBN-0001 <-> ISBN-0002 (bobot 2)
-      ISBN-0001 <-> ISBN-0003 (bobot 1)
-      ISBN-0002 <-> ISBN-0004 (bobot 3)
+    ISBN-0001 <-> ISBN-0002 (bobot 2)
+    ISBN-0001 <-> ISBN-0003 (bobot 1)
+    ISBN-0002 <-> ISBN-0004 (bobot 3)
     """
     g = GraphRekBuku()
     g.add_copinjam('ISBN-0001', 'ISBN-0002')
@@ -126,7 +126,7 @@ def test_rekomendasi_hop1_langsung():
 def test_rekomendasi_hop2_mencakup_tetangga_tetangga():
     """
     Dengan max_hop=2, ISBN-0004 harus muncul karena:
-      ISBN-0001 -> ISBN-0002 -> ISBN-0004
+    ISBN-0001 -> ISBN-0002 -> ISBN-0004
     """
     g = buat_graf_sederhana()
     hasil = g.rekomendasikan('ISBN-0001', max_hop=2)

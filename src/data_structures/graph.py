@@ -15,9 +15,9 @@ class GraphRekBuku:
     Representasi: adjacency list -> dict { isbn: [(isbn_tetangga, bobot)] }
 
     Operasi utama:
-      add_copinjam      -> O(deg) — perlu cek apakah edge sudah ada
-      rekomendasikan    -> O(V + E) — BFS terbatas hop
-      tambah_vertex     -> O(1)
+    add_copinjam      -> O(deg) — perlu cek apakah edge sudah ada
+    rekomendasikan    -> O(V + E) — BFS terbatas hop
+    tambah_vertex     -> O(1)
     """
 
     def __init__(self):
@@ -49,7 +49,7 @@ class GraphRekBuku:
 
         self.tambah_vertex(isbn_a)
         self.tambah_vertex(isbn_b) 
-         
+    
         # cek apakah edge sudah ada, jika ya naikkan bobotnya
         # graf tidak berarah: update kedua sisi
         

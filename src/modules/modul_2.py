@@ -20,14 +20,14 @@ class ManajerRiwayat:
     """
     Mengelola stack transaksi global perpustakaan.
     Setiap transaksi disimpan sebagai dict berisi:
-      {
+    {
         'tx_id'   : int,
         'aksi'    : str,   # 'PINJAM' | 'KEMBALIKAN' | 'PESAN' | 'BATAL_PESAN'
         'nim'     : str,
         'isbn'    : str,
         'waktu'   : float, # time.time()
         'durasi'  : int,   # hanya untuk PINJAM
-      }
+    }
     Dipanggil oleh modul_3 (BST) dan modul_1 (Queue)
     setelah setiap operasi berhasil.
     """

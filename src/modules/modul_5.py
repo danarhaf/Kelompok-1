@@ -112,7 +112,7 @@ def shell_sort_durasi(ll: LinkedListLaporan) -> LinkedListLaporan:
             j = i
             # geser elemen yang lebih kecil durasinya ke kanan (descending)
             while (j >= gap and
-                   nodes[j - gap].data.get('durasi', 0) < temp_data.get('durasi', 0)):
+                nodes[j - gap].data.get('durasi', 0) < temp_data.get('durasi', 0)):
                 nodes[j].data = nodes[j - gap].data
                 j -= gap
             nodes[j].data = temp_data
@@ -262,7 +262,7 @@ class ManajerLaporan:
     # Big-O eksperimen: O(n^1.5) Shell, O(n log n) Merge
     # ----------------------------------------------------------
     def benchmark_sorting(self, riwayat: list[dict],
-                          ukuran_list: list[int] = None) -> list[dict]:
+                        ukuran_list: list[int] = None) -> list[dict]:
         """
         Jalankan Shell Sort dan Merge Sort untuk 3 ukuran data berbeda.
         Kembalikan tabel runtime untuk laporan eksperimen.
