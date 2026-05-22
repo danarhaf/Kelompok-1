@@ -21,7 +21,6 @@ class GraphRekBuku:
     """
 
     def __init__(self):
-        
         # adj: kunci = isbn, nilai = list of tuple (isbn_tetangga, frekuensi)
         self._adj = {}
 
@@ -30,58 +29,49 @@ class GraphRekBuku:
     # Big-O Waktu : O(1)
     # Big-O Ruang : O(1)
     # ----------------------------------------------------------
-    
     def tambah_vertex(self, isbn):
         if isbn not in self._adj:
             self._adj[isbn] = []
-            
+
     # ----------------------------------------------------------
     # add_copinjam — tambah atau naikkan bobot edge (isbn_a, isbn_b)
     # Dipanggil setiap kali dua buku dipinjam dalam satu sesi anggota
     # Big-O Waktu : O(deg) — perlu scan tetangga untuk cek duplikat
     # Big-O Ruang : O(1) per panggilan
     # ----------------------------------------------------------
-    
     def add_copinjam(self, isbn_a, isbn_b):
-        
         if isbn_a == isbn_b:
             return   # tidak perlu self-loop
 
         self.tambah_vertex(isbn_a)
-        self.tambah_vertex(isbn_b) 
-    
+        self.tambah_vertex(isbn_b)
+
         # cek apakah edge sudah ada, jika ya naikkan bobotnya
         # graf tidak berarah: update kedua sisi
-        
         self._adj[isbn_a] = self._update_bobot(self._adj[isbn_a], isbn_b)
         self._adj[isbn_b] = self._update_bobot(self._adj[isbn_b], isbn_a)
-        
+
     def _update_bobot(self, daftar_tetangga, isbn_target):
-            
         """
         Cari isbn_target di daftar_tetangga dan naikkan bobotnya +1.
         Jika belum ada, tambahkan entry baru dengan bobot 1.
         Big-O: O(deg) — linear terhadap jumlah tetangga node ini
         """
-        
         for i, (tetangga, bobot) in enumerate(daftar_tetangga):
             if tetangga == isbn_target:
-                
                 # sudah ada — naikkan frekuensi
                 daftar_tetangga[i] = (tetangga, bobot + 1)
                 return daftar_tetangga
-            
         # belum ada — tambahkan edge baru
         daftar_tetangga.append((isbn_target, 1))
         return daftar_tetangga
-    
+
     # ----------------------------------------------------------
     # rekomendasikan — BFS dari isbn sumber hingga max_hop lompatan
     # Kembalikan list tuple (isbn, bobot_total, hop) terurut bobot turun
     # Big-O Waktu : O(V + E) — BFS mengunjungi setiap node dan edge sekali
     # Big-O Ruang : O(V) — visited set + antrian BFS
     # ----------------------------------------------------------
-    
     def rekomendasikan(self, isbn_sumber, max_hop=2, min_bobot=1):
         """
         BFS terbatas kedalaman untuk menemukan buku yang sering
@@ -107,7 +97,7 @@ class GraphRekBuku:
 
         while not antrian.is_empty():
             isbn_kini, hop_kini, bobot_kumulatif = antrian.dequeue()
-            
+
             # jelajahi semua tetangga node saat ini
             for isbn_tetangga, bobot_edge in self._adj.get(isbn_kini, []):
 
@@ -124,7 +114,7 @@ class GraphRekBuku:
 
                 # catat sebagai rekomendasi (bukan sumber sendiri)
                 hasil.append((isbn_tetangga, bobot_baru, hop_baru))
-                
+
                 # lanjut BFS ke level berikutnya jika belum maks hop
                 if hop_baru < max_hop:
                     antrian.enqueue((isbn_tetangga, hop_baru, bobot_baru))
@@ -138,7 +128,7 @@ class GraphRekBuku:
         """
         Insertion sort pada list of tuple berdasarkan elemen index-1 (bobot) secara menurun.
         Big-O Waktu : O(k^2) — k = jumlah kandidat rekomendasi (biasanya kecil)
-        Dipilih karena k relatif kecil dibanding n buku total.
+        Dipilih karena k = jumlah buku dalam radius max_hop dari sumber, jauh lebih kecil dari n total buku di katalog.
         """
         for i in range(1, len(data)):
             kunci = data[i]
@@ -149,16 +139,15 @@ class GraphRekBuku:
                 j -= 1
             data[j + 1] = kunci
         return data
-    
+
     # ----------------------------------------------------------
     # tetangga — kembalikan daftar tetangga langsung suatu isbn
     # Big-O Waktu : O(1) — lookup dict langsung
     # Big-O Ruang : O(deg)
     # ----------------------------------------------------------
-    
     def tetangga(self, isbn):
         return self._adj.get(isbn, [])
-    
+
     # ----------------------------------------------------------
     # info_graf — statistik dasar graf (untuk laporan eksperimen)
     # Big-O Waktu : O(V + E)
@@ -170,8 +159,8 @@ class GraphRekBuku:
             sum(len(v) for v in self._adj.values()) / total_vertex
             if total_vertex > 0 else 0
         )
-        return {       
-                "vertex": total_vertex,
+        return {
+            "vertex": total_vertex,
             "edge": total_edge,
             "derajat_rata_rata": round(derajat_rata, 2)
         }

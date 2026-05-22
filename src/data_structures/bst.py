@@ -35,7 +35,7 @@ class BSTKatalog:
     # ----------------------------------------------------------
     # insert — sisipkan buku baru ke BST
     # Big-O Waktu : O(log n) rata-rata | O(n) worst-case (pohon miring)
-    # Big-O Ruang : O(log n) call stack rekursif rata-rata
+    # Big-O Ruang : O(log n) rata-rata | O(n) worst-case (call stack rekursif)
     # ----------------------------------------------------------
     def insert(self, buku):
         if self._root is None:
@@ -75,7 +75,7 @@ class BSTKatalog:
     # ----------------------------------------------------------
     # search — cari buku berdasarkan ISBN
     # Big-O Waktu : O(log n) rata-rata | O(n) worst-case
-    # Big-O Ruang : O(log n) call stack rekursif
+    # Big-O Ruang : O(log n) rata-rata | O(n) worst-case (call stack rekursif)
     # Mengembalikan objek Buku jika ditemukan, atau None
     # ----------------------------------------------------------
     def search(self, isbn):

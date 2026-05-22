@@ -6,14 +6,7 @@
 # ============================================================
 
 
-class _Node:
-    """
-    Node internal Stack.
-    Hanya butuh pointer ke node di bawahnya (prev dalam tumpukan).
-    """
-    def __init__(self, data=None):
-        self.data = data
-        self.next = None   # menunjuk ke node yang lebih lama (di bawah)
+from data_structures.linked_list import LLNode
 
 
 class Stack:
@@ -37,7 +30,7 @@ class Stack:
     # Big-O Ruang : O(1) — satu node baru per panggilan
     # ----------------------------------------------------------
     def push(self, data):
-        baru = _Node(data)
+        baru = LLNode(data)
         baru.next = self._top   # node baru menunjuk ke node top lama
         self._top = baru        # top sekarang adalah node baru
         self._size += 1
@@ -93,13 +86,15 @@ class Stack:
     # Big-O Waktu : O(n) — traversal seluruh stack sekali
     # Big-O Ruang : O(n) — membuat linked list baru sebesar isi stack
     # ----------------------------------------------------------
-    def pindah_ke_linked_list(self, maks_simpan=50):
+    
+    def arsip_transaksi_lama(self, maks_simpan=50):
+        
         """
-        Jika stack melebihi maks_simpan, elemen-elemen lama
-        (yang ada di bawah) dipindah dan dikembalikan sebagai list.
-        Stack hanya menyisakan maks_simpan elemen teratas.
-        Berguna agar Stack tidak tumbuh tak terbatas dalam produksi.
+        arsip_transaksi_lama — strategi archiving: pindah N elemen
+        terbawah (terlama) ke Python list agar stack tetap ringkas
+        Big-O Ruang : O(n) — menyalin elemen arsip ke dalam Python list
         """
+        
         if self._size <= maks_simpan:
             return []   # belum perlu archiving
 
