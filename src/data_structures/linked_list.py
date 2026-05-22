@@ -99,3 +99,33 @@ class LinkedList:
                 return current
             current = current.next
         return None
+
+    # ----------------------------------------------------------
+    # hapus_nilai — hapus node pertama dengan data tertentu
+    # Big-O Waktu : O(n) — perlu cari posisi dulu
+    # Big-O Ruang : O(1)
+    # Kembalikan True jika berhasil, False jika tidak ditemukan
+    # ----------------------------------------------------------
+    def hapus_nilai(self, data):
+        if self.head is None:
+            return False
+
+        # kasus: node yang dihapus adalah head
+        if self.head.data == data:
+            self.head = self.head.next
+            if self.head is None:
+                self._tail = None
+            self._size -= 1
+            return True
+
+        # kasus: node ada di tengah atau ekor
+        current = self.head
+        while current.next is not None:
+            if current.next.data == data:
+                if current.next == self._tail:
+                    self._tail = current   # update tail jika ekor yang dihapus
+                current.next = current.next.next
+                self._size -= 1
+                return True
+            current = current.next
+        return False
