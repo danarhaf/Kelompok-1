@@ -2,11 +2,13 @@
 # stack.py
 # Implementasi Stack berbasis Linked List dari nol
 # Digunakan untuk riwayat transaksi global + fitur UNDO
+#
+# Node diimport dari linked_list.py (tidak didefinisikan ulang)
+#
 # Kompleksitas Ruang Keseluruhan: O(n) — satu node per transaksi
 # ============================================================
 
-
-from data_structures.linked_list import LLNode
+from data_structures.linked_list import LLNode  # import Node dari linked_list.py
 
 
 class Stack:
@@ -17,7 +19,7 @@ class Stack:
     - peek : intip paling atas       -> O(1)
 
     Top stack = head linked list, sehingga setiap operasi
-    push/pop hanya menyentuh node paling depan — tidak ada traversal.
+    push/pop hanya menyentuh node paling depan tanpa traversal.
     """
 
     def __init__(self):
@@ -26,12 +28,12 @@ class Stack:
 
     # ----------------------------------------------------------
     # push — taruh data baru di paling atas
-    # Big-O Waktu : O(1) — cukup ganti pointer top, tidak perlu cari posisi
+    # Big-O Waktu : O(1) — cukup ganti pointer top
     # Big-O Ruang : O(1) — satu node baru per panggilan
     # ----------------------------------------------------------
     def push(self, data):
-        baru = LLNode(data)
-        baru.next = self._top   # node baru menunjuk ke node top lama
+        baru = LLNode(data)       # pakai Node dari linked_list.py
+        baru.next = self._top   # node baru menunjuk ke top lama
         self._top = baru        # top sekarang adalah node baru
         self._size += 1
 
@@ -39,7 +41,7 @@ class Stack:
     # pop — ambil dan hapus data paling atas
     # Big-O Waktu : O(1) — langsung cabut top tanpa traversal
     # Big-O Ruang : O(1) — tidak alokasi memori baru
-    # Mengembalikan data yang diambil, atau None jika stack kosong
+    # Mengembalikan data, atau None jika stack kosong
     # ----------------------------------------------------------
     def pop(self):
         if self._top is None:
@@ -68,8 +70,8 @@ class Stack:
         return self._size == 0
 
     # ----------------------------------------------------------
-    # tampilkan_stack — kembalikan list semua elemen dari atas ke bawah
-    # Big-O Waktu : O(n) — traversal penuh dari top ke node terbawah
+    # tampilkan_stack — kembalikan list semua elemen (atas ke bawah)
+    # Big-O Waktu : O(n) — traversal penuh dari top ke terbawah
     # Big-O Ruang : O(n) — salinan semua data ke dalam list
     # ----------------------------------------------------------
     def tampilkan_stack(self):
@@ -81,35 +83,32 @@ class Stack:
         return hasil
 
     # ----------------------------------------------------------
-    # pindah_ke_linked_list — strategi archiving: pindah N elemen
-    # terbawah (terlama) ke struktur lain agar stack tetap ringkas
-    # Big-O Waktu : O(n) — traversal seluruh stack sekali
-    # Big-O Ruang : O(n) — membuat linked list baru sebesar isi stack
+    # pindah_ke_linked_list — strategi archiving
+    # Pindah elemen lama ke list arsip agar stack tetap ringkas
+    # Big-O Waktu : O(n) — traversal seluruh stack
+    # Big-O Ruang : O(n) — list arsip
+    # Relevan untuk Pertanyaan Analisis no. 4
     # ----------------------------------------------------------
-    
-    def arsip_transaksi_lama(self, maks_simpan=50):
-        
+    def pindah_ke_linked_list(self, maks_simpan=50):
         """
-        arsip_transaksi_lama — strategi archiving: pindah N elemen
-        terbawah (terlama) ke Python list agar stack tetap ringkas
-        Big-O Ruang : O(n) — menyalin elemen arsip ke dalam Python list
+        Jika stack melebihi maks_simpan, elemen lama (terbawah)
+        dipindah ke list arsip. Stack hanya menyisakan maks_simpan
+        elemen teratas. Berguna agar Stack tidak tumbuh tak terbatas.
         """
-        
         if self._size <= maks_simpan:
             return []   # belum perlu archiving
 
-        # ambil semua elemen dulu (urutan: atas -> bawah)
+        # ambil semua elemen (urutan: atas -> bawah)
         semua = self.tampilkan_stack()
 
-        # sisakan maks_simpan elemen paling atas di stack
+        # sisakan maks_simpan elemen paling atas
         tetap = semua[:maks_simpan]
         arsip = semua[maks_simpan:]   # elemen lama yang dipindah
 
         # bangun ulang stack hanya dari elemen yang tetap
-        # (harus dibalik dulu karena push menambah dari atas)
         self._top = None
         self._size = 0
-        for item in reversed(tetap):
+        for item in reversed(tetap):   # reversed agar urutan tetap benar
             self.push(item)
 
         return arsip   # kembalikan elemen arsip ke pemanggil
