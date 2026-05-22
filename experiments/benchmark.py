@@ -23,7 +23,7 @@ _MOD  = os.path.join(_ROOT, 'src', 'modules')
 sys.path.insert(0, _SRC)   # untuk data_structures, data_model, generate_data
 sys.path.insert(0, _MOD)   # untuk modul_1 s.d. modul_6
 
-from data_structures.queue_ll import Queue
+from data_structures.queue import Queue
 from data_structures.stack    import Stack
 from data_structures.bst      import BSTKatalog
 from data_structures.graph    import GraphRekBuku

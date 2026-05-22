@@ -13,7 +13,7 @@
 
 import time
 
-from data_structures.queue_ll import Queue
+from data_structures.queue import Queue
 from data_model import STATUS
 
 

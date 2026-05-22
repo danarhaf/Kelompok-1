@@ -10,7 +10,7 @@ import os
 # supaya bisa import dari src/ tanpa install package
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-from data_structures.queue_ll import Queue
+from data_structures.queue import Queue
 
 
 # ── helper ────────────────────────────────────────────────────

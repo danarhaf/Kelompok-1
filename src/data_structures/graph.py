@@ -6,7 +6,7 @@
 # Kompleksitas Ruang Keseluruhan: O(V + E)
 # ============================================================
 
-from data_structures.queue_ll import Queue
+from data_structures.queue import Queue
 
 
 class GraphRekBuku:
