@@ -2,18 +2,13 @@
 # queue_ll.py
 # Implementasi Queue berbasis Linked List dari nol
 # Digunakan untuk antrian pemesanan buku per-ISBN
-# Kompleksitas Ruang Keseluruhan: O(n) — n node = n elemen antrian
+#
+# Node diimport dari linked_list.py (tidak didefinisikan ulang)
+#
+# Kompleksitas Ruang Keseluruhan: O(n) — n node = n elemen
 # ============================================================
 
-
-class _Node:
-    """
-    Node internal untuk membangun rantai Linked List.
-    Setiap node menyimpan data dan pointer ke node berikutnya.
-    """
-    def __init__(self, data=None):
-        self.data = data
-        self.next = None
+from data_structures.linked_list import Node   # import Node dari linked_list.py
 
 
 class Queue:
@@ -34,11 +29,11 @@ class Queue:
 
     # ----------------------------------------------------------
     # enqueue — tambah elemen baru di belakang antrian
-    # Big-O Waktu : O(1) — langsung tempel ke tail, tidak perlu cari ujung
+    # Big-O Waktu : O(1) — langsung tempel ke tail
     # Big-O Ruang : O(1) — satu node baru per panggilan
     # ----------------------------------------------------------
     def enqueue(self, data):
-        baru = _Node(data)
+        baru = Node(data)   # pakai Node dari linked_list.py
         if self._tail is None:
             # antrian kosong: head dan tail menunjuk node yang sama
             self._head = baru
@@ -51,7 +46,7 @@ class Queue:
 
     # ----------------------------------------------------------
     # dequeue — ambil dan hapus elemen paling depan
-    # Big-O Waktu : O(1) — langsung cabut head, tidak ada traversal
+    # Big-O Waktu : O(1) — langsung cabut head
     # Big-O Ruang : O(1) — tidak alokasi memori baru
     # Mengembalikan data elemen yang diambil, atau None jika kosong
     # ----------------------------------------------------------
@@ -87,9 +82,9 @@ class Queue:
         return self._size == 0
 
     # ----------------------------------------------------------
-    # tampilkan_antrian — kembalikan list semua elemen (untuk debug/CLI)
-    # Big-O Waktu : O(n) — traversal satu kali dari head ke tail
-    # Big-O Ruang : O(n) — menyimpan salinan semua data ke dalam list
+    # tampilkan_antrian — kembalikan list semua elemen
+    # Big-O Waktu : O(n) — traversal satu kali head ke tail
+    # Big-O Ruang : O(n) — salinan semua data ke dalam list
     # ----------------------------------------------------------
     def tampilkan_antrian(self):
         hasil = []
