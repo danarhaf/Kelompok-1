@@ -129,3 +129,30 @@ class LinkedList:
                 return True
             current = current.next
         return False
+
+    # ----------------------------------------------------------
+    # ke_list — konversi seluruh LL ke list Python
+    # Big-O Waktu : O(n)
+    # Big-O Ruang : O(n)
+    # Berguna untuk menampilkan isi atau keperluan sorting
+    # ----------------------------------------------------------
+    def ke_list(self):
+        hasil = []
+        current = self.head
+        while current is not None:
+            hasil.append(current.data)
+            current = current.next
+        return hasil
+
+    # ----------------------------------------------------------
+    # is_empty — cek apakah list kosong
+    # Big-O Waktu : O(1)
+    # ----------------------------------------------------------
+    def is_empty(self):
+        return self._size == 0
+
+    def __len__(self):
+        return self._size
+
+    def __repr__(self):
+        return f"LinkedList({self.ke_list()})"
