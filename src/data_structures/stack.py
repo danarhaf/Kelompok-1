@@ -8,7 +8,7 @@
 # Kompleksitas Ruang Keseluruhan: O(n) — satu node per transaksi
 # ============================================================
 
-from data_structures.linked_list import LLNode  # import Node dari linked_list.py
+from data_structures.linked_list import LLNode  # import LLNode dari linked_list.py
 
 
 class Stack:
@@ -89,7 +89,7 @@ class Stack:
     # Big-O Ruang : O(n) — list arsip
     # Relevan untuk Pertanyaan Analisis no. 4
     # ----------------------------------------------------------
-    def pindah_ke_linked_list(self, maks_simpan=50):
+    def arsip_transaksi_lama(self, maks_simpan=50):
         """
         Jika stack melebihi maks_simpan, elemen lama (terbawah)
         dipindah ke list arsip. Stack hanya menyisakan maks_simpan
