@@ -188,3 +188,53 @@ def test_merge_sort_descending_benar():
     head = buat_ll_frekuensi(*freq)
     hasil = merge_sort_frekuensi(head)
     assert ambil_frekuensi(hasil) == sorted(freq, reverse=True)
+
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 5 — helper internal: _split_tengah
+# ══════════════════════════════════════════════════════════════
+
+def test_split_tengah_dua_node():
+    head = buat_ll_frekuensi(1, 2)
+    kiri, kanan = _split_tengah(head)
+    assert kiri is not None
+    assert kanan is not None
+    assert kiri.next is None   # kiri hanya satu node
+
+def test_split_tengah_tiga_node():
+    head = buat_ll_frekuensi(1, 2, 3)
+    kiri, kanan = _split_tengah(head)
+    # kiri: 2 node, kanan: 1 node
+    kiri_list = ambil_frekuensi(kiri)
+    kanan_list = ambil_frekuensi(kanan)
+    assert len(kiri_list) + len(kanan_list) == 3
+
+def test_split_tengah_tidak_ada_overlap():
+    head = buat_ll_frekuensi(1, 2, 3, 4)
+    kiri, kanan = _split_tengah(head)
+    kiri_list = ambil_frekuensi(kiri)
+    kanan_list = ambil_frekuensi(kanan)
+    # tidak ada node yang muncul di dua sisi
+    assert set(kiri_list).isdisjoint(set(kanan_list)) or \
+        len(kiri_list) + len(kanan_list) == 4
+
+
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 6 — helper internal: _merge_descending
+# ══════════════════════════════════════════════════════════════
+
+def test_merge_descending_dua_list_terurut():
+    kiri  = buat_ll_frekuensi(8, 4)
+    kanan = buat_ll_frekuensi(6, 2)
+    hasil = _merge_descending(kiri, kanan)
+    assert ambil_frekuensi(hasil) == [8, 6, 4, 2]
+
+def test_merge_descending_salah_satu_kosong():
+    kiri  = buat_ll_frekuensi(5, 3)
+    hasil = _merge_descending(kiri, None)
+    assert ambil_frekuensi(hasil) == [5, 3]
+
+def test_merge_descending_keduanya_satu_node():
+    kiri  = buat_ll_frekuensi(7)
+    kanan = buat_ll_frekuensi(3)
+    hasil = _merge_descending(kiri, kanan)
+    assert ambil_frekuensi(hasil) == [7, 3]
