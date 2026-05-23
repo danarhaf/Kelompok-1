@@ -174,7 +174,7 @@ def test_push_objek_dict_sebagai_transaksi():
 
 def test_archiving_tidak_terjadi_jika_belum_melebihi_batas():
     s = buat_stack(1, 2, 3)
-    arsip = s.pindah_ke_linked_list(maks_simpan=10)
+    arsip = s.arsip_transaksi_lama(maks_simpan=10)
     # belum perlu arsip karena size <= maks_simpan
     assert arsip == []
     assert len(s) == 3
@@ -206,7 +206,7 @@ def test_archiving_stack_tetap_berfungsi_normal_setelahnya():
     s = Stack()
     for i in range(1, 11):
         s.push(i)
-    s.pindah_ke_linked_list(maks_simpan=5)
+    s.arsip_transaksi_lama(maks_simpan=5)
 
     # setelah archiving, push/pop harus tetap normal
     s.push(99)
