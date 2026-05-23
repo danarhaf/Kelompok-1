@@ -131,3 +131,60 @@ def test_shell_sort_descending_benar():
     shell_sort_durasi(head)
     hasil = ambil_durasi(head)
     assert hasil == sorted(durasi, reverse=True)
+
+
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 3 — merge_sort_frekuensi: kondisi dasar
+# ══════════════════════════════════════════════════════════════
+
+def test_merge_sort_none_kembalikan_none():
+    assert merge_sort_frekuensi(None) is None
+
+def test_merge_sort_satu_node():
+    head = buat_ll_frekuensi(5)
+    hasil = merge_sort_frekuensi(head)
+    assert ambil_frekuensi(hasil) == [5]
+
+def test_merge_sort_dua_node_descending():
+    head = buat_ll_frekuensi(3, 7)
+    hasil = merge_sort_frekuensi(head)
+    assert ambil_frekuensi(hasil) == [7, 3]
+
+def test_merge_sort_sudah_terurut():
+    head = buat_ll_frekuensi(10, 7, 5, 3, 1)
+    hasil = merge_sort_frekuensi(head)
+    assert ambil_frekuensi(hasil) == [10, 7, 5, 3, 1]
+
+
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 4 — merge_sort_frekuensi: pengurutan benar
+# ══════════════════════════════════════════════════════════════
+
+def test_merge_sort_urutan_acak():
+    freq = [3, 8, 1, 6, 2]
+    head = buat_ll_frekuensi(*freq)
+    hasil = merge_sort_frekuensi(head)
+    assert ambil_frekuensi(hasil) == sorted(freq, reverse=True)
+
+def test_merge_sort_semua_nilai_sama():
+    head = buat_ll_frekuensi(5, 5, 5, 5)
+    hasil = merge_sort_frekuensi(head)
+    assert ambil_frekuensi(hasil) == [5, 5, 5, 5]
+
+def test_merge_sort_jumlah_node_tidak_berubah():
+    freq = [1, 2, 3, 4, 5, 6, 7]
+    head = buat_ll_frekuensi(*freq)
+    hasil = merge_sort_frekuensi(head)
+    assert len(ambil_frekuensi(hasil)) == len(freq)
+
+def test_merge_sort_nilai_tidak_hilang():
+    freq = [4, 2, 7, 1, 9, 3]
+    head = buat_ll_frekuensi(*freq)
+    hasil = merge_sort_frekuensi(head)
+    assert sorted(ambil_frekuensi(hasil)) == sorted(freq)
+
+def test_merge_sort_descending_benar():
+    freq = [5, 2, 8, 1, 9, 3, 7, 4, 6]
+    head = buat_ll_frekuensi(*freq)
+    hasil = merge_sort_frekuensi(head)
+    assert ambil_frekuensi(hasil) == sorted(freq, reverse=True)
