@@ -22,6 +22,7 @@
 from modul_1 import ManajerAntrian
 from modul_2 import ManajerRiwayat
 from modul_3 import ManajerKatalog
+from modul_3 import LABEL_STATUS
 from modul_4 import ManajerRekomendasi
 from modul_5 import ManajerLaporan
 
@@ -313,7 +314,6 @@ class CLI:
     # Big-O: O(n) inorder BST
     # ----------------------------------------------------------
     def _handle_katalog(self, token):
-        from modul_3 import LABEL_STATUS
         daftar = self._katalog.katalog_semua()   # O(n)
         print(f'\n[KATALOG] Total {len(daftar)} buku (urutan ISBN):')
         print(f"{'No':>4} {'ISBN':<12} {'Judul':<30} {'Pengarang':<18} "
