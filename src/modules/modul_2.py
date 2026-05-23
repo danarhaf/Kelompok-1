@@ -108,7 +108,7 @@ class ManajerRiwayat:
         ke list arsip dan dikembalikan ke pemanggil.
         Stack tetap menyimpan maks_simpan transaksi terbaru.
         """
-        return self._stack.pindah_ke_linked_list(maks_simpan)   # O(n)
+        return self._stack.arsip_transaksi_lama(maks_simpan)   # O(n)
     
     # ----------------------------------------------------------
     # ukuran — jumlah transaksi di stack saat ini
