@@ -191,7 +191,7 @@ def test_archiving_memindah_elemen_lama():
     for i in range(1, 11):   # push 1..10, top = 10
         s.push(i)
 
-    arsip = s.pindah_ke_linked_list(maks_simpan=5)
+    arsip = s.arsip_transaksi_lama(maks_simpan=5)
 
     # stack menyisakan 5 elemen teratas: 10, 9, 8, 7, 6
     assert len(s) == 5
