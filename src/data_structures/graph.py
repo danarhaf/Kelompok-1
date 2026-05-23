@@ -2,7 +2,7 @@
 # graph.py
 # Implementasi Graf Tak-Berarah Berbobot berbasis adjacency list
 # Edge (A, B, w): buku A dan B pernah dipinjam bersama sebanyak w kali
-# BFS menggunakan Queue dari queue_ll.py (bukan deque bawaan Python)
+# BFS menggunakan Queue dari queue_.py (bukan deque bawaan Python)
 # Kompleksitas Ruang Keseluruhan: O(V + E)
 # ============================================================
 
