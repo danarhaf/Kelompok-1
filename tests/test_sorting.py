@@ -73,3 +73,61 @@ def ambil_frekuensi(head):
         hasil.append(cur.data.get('frekuensi'))
         cur = cur.next
     return hasil
+
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 1 — shell_sort_durasi: kondisi dasar
+# ══════════════════════════════════════════════════════════════
+
+def test_shell_sort_head_none_kembalikan_none():
+    assert shell_sort_durasi(None) is None
+
+def test_shell_sort_satu_node_tidak_error():
+    head = buat_ll_durasi(14)
+    hasil = shell_sort_durasi(head)
+    assert ambil_durasi(hasil) == [14]
+
+def test_shell_sort_dua_node_descending():
+    head = buat_ll_durasi(7, 21)
+    shell_sort_durasi(head)
+    assert ambil_durasi(head) == [21, 7]
+
+def test_shell_sort_sudah_terurut_descending():
+    head = buat_ll_durasi(30, 21, 14, 7)
+    shell_sort_durasi(head)
+    assert ambil_durasi(head) == [30, 21, 14, 7]
+
+
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 2 — shell_sort_durasi: pengurutan benar
+# ══════════════════════════════════════════════════════════════
+
+def test_shell_sort_urutan_acak():
+    durasi = [7, 30, 14, 21, 10]
+    head = buat_ll_durasi(*durasi)
+    shell_sort_durasi(head)
+    assert ambil_durasi(head) == sorted(durasi, reverse=True)
+
+def test_shell_sort_semua_nilai_sama():
+    head = buat_ll_durasi(14, 14, 14)
+    shell_sort_durasi(head)
+    assert ambil_durasi(head) == [14, 14, 14]
+
+def test_shell_sort_jumlah_node_tidak_berubah():
+    durasi = [5, 20, 15, 10, 25, 30]
+    head = buat_ll_durasi(*durasi)
+    shell_sort_durasi(head)
+    hasil = ambil_durasi(head)
+    assert len(hasil) == len(durasi)
+
+def test_shell_sort_nilai_tidak_hilang():
+    durasi = [7, 30, 14, 21, 10]
+    head = buat_ll_durasi(*durasi)
+    shell_sort_durasi(head)
+    assert sorted(ambil_durasi(head)) == sorted(durasi)
+
+def test_shell_sort_descending_benar():
+    durasi = [3, 1, 4, 1, 5, 9, 2, 6]
+    head = buat_ll_durasi(*durasi)
+    shell_sort_durasi(head)
+    hasil = ambil_durasi(head)
+    assert hasil == sorted(durasi, reverse=True)
