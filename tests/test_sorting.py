@@ -238,3 +238,66 @@ def test_merge_descending_keduanya_satu_node():
     kanan = buat_ll_frekuensi(3)
     hasil = _merge_descending(kiri, kanan)
     assert ambil_frekuensi(hasil) == [7, 3]
+
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 7 — skenario realistis perpustakaan
+# ══════════════════════════════════════════════════════════════
+
+def test_shell_sort_data_peminjaman_nyata():
+    """
+    Simulasi 10 transaksi PINJAM dengan durasi acak (seed=13).
+    Hasil Shell Sort harus descending — anggota pinjam terlama
+    tampil paling atas di laporan bulanan.
+    """
+    random.seed(13)
+    durasi_list = [random.randint(7, 30) for _ in range(10)]
+    head = buat_ll_durasi(*durasi_list)
+    shell_sort_durasi(head)
+    hasil = ambil_durasi(head)
+    assert hasil == sorted(durasi_list, reverse=True)
+
+
+def test_merge_sort_frekuensi_80_isbn():
+    """
+    Simulasi frekuensi peminjaman 80 ISBN dengan seed=13.
+    Merge Sort harus menghasilkan urutan descending yang benar.
+    Sesuai parameter sistem: 80 buku.
+    """
+    random.seed(13)
+    freq_list = [random.randint(1, 20) for _ in range(80)]
+    head = buat_ll_frekuensi(*freq_list)
+    hasil = merge_sort_frekuensi(head)
+    hasil_list = ambil_frekuensi(hasil)
+
+    assert len(hasil_list) == 80
+    assert hasil_list == sorted(freq_list, reverse=True)
+
+
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 8 — skala besar N=300
+# ══════════════════════════════════════════════════════════════
+
+def test_shell_sort_skala_besar():
+    """
+    Shell Sort 300 elemen. Big-O ~O(n^1.5).
+    Memastikan tidak ada error pada skala beban tinggi.
+    """
+    random.seed(13)
+    durasi_list = [random.randint(1, 60) for _ in range(300)]
+    head = buat_ll_durasi(*durasi_list)
+    shell_sort_durasi(head)
+    hasil = ambil_durasi(head)
+    assert hasil == sorted(durasi_list, reverse=True)
+
+
+def test_merge_sort_skala_besar():
+    """
+    Merge Sort 300 elemen. Big-O O(n log n).
+    Memastikan rekursif tidak stack overflow dan hasilnya benar.
+    """
+    random.seed(13)
+    freq_list = [random.randint(1, 50) for _ in range(300)]
+    head = buat_ll_frekuensi(*freq_list)
+    hasil = merge_sort_frekuensi(head)
+    hasil_list = ambil_frekuensi(hasil)
+    assert hasil_list == sorted(freq_list, reverse=True)
