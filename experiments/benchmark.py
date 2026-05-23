@@ -27,14 +27,14 @@ from data_structures.queue import Queue
 from data_structures.stack    import Stack
 from data_structures.bst      import BSTKatalog
 from data_structures.graph    import GraphRekBuku
+from data_structures.sorting  import shell_sort_durasi, merge_sort_frekuensi
 from data_model               import Buku, STATUS
 from generate_data            import generate_koleksi
-from modules.modul_5          import (LinkedListLaporan,
-                                    shell_sort_durasi,
-                                    merge_sort_frekuensi)
+from modules.modul_5                  import LinkedListLaporan
 
 # seed tetap agar hasil reprodusibel
 random.seed(13)
+
 
 # ── utilitas ─────────────────────────────────────────────────
 
@@ -77,6 +77,7 @@ def buat_buku(isbn: str) -> Buku:
         kategori='Teknik',
         status=STATUS['TERSEDIA'],
     )
+
 
 # ════════════════════════════════════════════════════════════
 # 1. BENCHMARK QUEUE
@@ -122,6 +123,7 @@ def benchmark_queue(ukuran_list: list) -> list:
     )
     return hasil
 
+
 # ════════════════════════════════════════════════════════════
 # 2. BENCHMARK STACK
 # Operasi: push O(1), pop O(1)
@@ -165,6 +167,7 @@ def benchmark_stack(ukuran_list: list) -> list:
         hasil,
     )
     return hasil
+
 
 # ════════════════════════════════════════════════════════════
 # 3. BENCHMARK BST
@@ -243,6 +246,7 @@ def benchmark_bst(ukuran_list: list) -> list:
     print('  Relevan untuk Pertanyaan Analisis no. 1')
     return hasil
 
+
 # ════════════════════════════════════════════════════════════
 # 4. BENCHMARK GRAPH (BFS)
 # Operasi: add_copinjam O(deg), BFS O(V+E)
@@ -302,6 +306,7 @@ def benchmark_graph(ukuran_list: list) -> list:
     print('  Relevan untuk Pertanyaan Analisis no. 3')
     return hasil
 
+
 # ════════════════════════════════════════════════════════════
 # 5. BENCHMARK SORTING (Shell Sort vs Merge Sort)
 # Pada Linked List, bukan list Python
@@ -326,7 +331,7 @@ def benchmark_sorting(ukuran_list: list) -> list:
             ll = LinkedListLaporan()
             for tx in tx_list:
                 ll.tambah_belakang(tx)
-            shell_sort_durasi(ll)
+            shell_sort_durasi(ll.head)   # pass head node
 
         t_shell = ukur_waktu(uji_shell)
 
@@ -340,7 +345,7 @@ def benchmark_sorting(ukuran_list: list) -> list:
             ll = LinkedListLaporan()
             for isbn, jumlah in freq.items():
                 ll.tambah_belakang({'isbn': isbn, 'frekuensi': jumlah})
-            merge_sort_frekuensi(ll.head)
+            merge_sort_frekuensi(ll.head)   # pass head node
 
         t_merge = ukur_waktu(uji_merge)
 
@@ -361,6 +366,7 @@ def benchmark_sorting(ukuran_list: list) -> list:
     print('  Catatan: Merge Sort lebih konsisten O(n log n),')
     print('  Shell Sort lebih cepat untuk data hampir terurut.')
     return hasil
+
 
 # ════════════════════════════════════════════════════════════
 # 6. BENCHMARK INTEGRASI — simulasi 300 event campuran
@@ -455,4 +461,3 @@ if __name__ == '__main__':
     print('  Benchmark selesai.')
     print('  Salin tabel di atas ke Bab V Laporan (Hasil Eksperimen).')
     print('=' * 60)
-
