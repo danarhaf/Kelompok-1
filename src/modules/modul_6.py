@@ -19,12 +19,12 @@
 #   KELUAR
 # ============================================================
 
-from modul_1 import ManajerAntrian
-from modul_2 import ManajerRiwayat
-from modul_3 import ManajerKatalog
-from modul_3 import LABEL_STATUS
-from modul_4 import ManajerRekomendasi
-from modul_5 import ManajerLaporan
+from modules.modul_1 import ManajerAntrian
+from modules.modul_2 import ManajerRiwayat
+from modules.modul_3 import ManajerKatalog
+from modules.modul_3 import LABEL_STATUS
+from modules.modul_4 import ManajerRekomendasi
+from modules.modul_5 import ManajerLaporan
 
 
 # ── banner & bantuan ─────────────────────────────────────────
