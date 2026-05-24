@@ -112,8 +112,7 @@ tbp-asd-library-kelXX/
 │   └── slide_presentasi.pdf
 │
 └── AI_Log/
-    ├── Log_prompt.txt
-    └── screenshots/
+    └── Log_prompt.txt
 ```
 
 ---
@@ -361,27 +360,6 @@ Seluruh kode yang dihasilkan dengan bantuan AI telah ditinjau, dipahami, dan div
 
 ---
 
-## ✅ Checklist Deliverable
-
-- [x] Kode berjalan tanpa error saat demo
-- [x] Semua struktur data diimplementasi dari nol (tanpa library)
-- [x] CLI interaktif berfungsi end-to-end
-- [x] Analisis Big-O ada di setiap fungsi (docstring)
-- [x] Tabel runtime ≥ 3 ukuran data tersedia
-- [x] 5 pertanyaan analisis wajib dijawab
-- [x] Laporan PDF 8-12 hal., semua Bab I-VII ada
-- [x] Slide presentasi 10-12 lembar
-- [x] Struktur folder sesuai panduan (src/, tests/, docs/, experiments/, AI_Log/)
-- [x] README berisi cara menjalankan + contoh input/output
-- [x] AI_Log/ tersedia (Log_prompt.txt + screenshots)
-- [x] Setiap anggota dapat menjelaskan modulnya
-- [x] GitHub: branch feat/* digunakan
-- [x] Commit history menunjukkan kontribusi semua anggota
-- [x] Seed acak TIDAK diubah (reproducible)
-- [x] Eksperimen runtime tersedia di folder experiments/
-
----
-
 ## Referensi
 
 - Panduan TBP ELT60213 TA 2025/2026 - Dr.Eng. Ir. Aji Ery Burhandenny, ST., M.AIT.
@@ -403,7 +381,7 @@ Proyek ini dikerjakan dengan bantuan dua AI assistant:
 | Claude (Anthropic) | Claude Sonnet 4.6 | Review kode, analisis Big-O, debugging, penjelasan konsep struktur data      |
 | ChatGPT (OpenAI)   | GPT-5.5           | Brainstorming desain sistem, penjelasan algoritma, bantuan penulisan laporan |
 
-Detail lengkap seluruh percakapan tersedia di folder `AI_Log/Log_prompt.txt` beserta screenshot sesi.
+Detail lengkap seluruh percakapan tersedia di folder `AI_Log/Log_prompt.txt`.
 
 > Seluruh output AI telah dibaca, dipahami, dan diverifikasi kebenarannya oleh masing-masing anggota kelompok sebelum digunakan dalam proyek.
 
@@ -421,7 +399,6 @@ Kami, seluruh anggota kelompok, menyatakan bahwa:
 
 4. **Kode ini merupakan hasil karya kelompok kami sendiri** dan tidak identik dengan kelompok lain. Kami memahami bahwa kode identik antar kelompok berakibat nilai 0 untuk semua pihak.
 
-5. **Kami siap menjelaskan setiap baris kode** saat sesi presentasi dan tanya jawab dengan dosen pada Pertemuan 15.
 
 |           Nama               |     NIM     |  Tanda Tangan  |
 |------------------------------|-------------|----------------|
