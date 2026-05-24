@@ -1,5 +1,5 @@
 # ============================================================
-# queue_ll.py
+# queue.py
 # Implementasi Queue berbasis Linked List dari nol
 # Digunakan untuk antrian pemesanan buku per-ISBN
 # Kompleksitas Ruang Keseluruhan: O(n) — n node = n elemen antrian
