@@ -1,0 +1,231 @@
+# ============================================================
+# modul_3.py
+# Modul BST Katalog Buku
+# Menangani operasi bisnis utama: CARI_BUKU, PINJAM, KEMBALIKAN.
+# BST dipakai sebagai katalog dengan kunci ISBN.
+# Setiap operasi yang mengubah status buku juga mencatat
+# transaksi ke ManajerRiwayat (modul_2).
+#
+# Struktur data : BST berbasis Linked Node (bst.py)
+# Big-O search  : O(log n) rata-rata
+# Big-O insert  : O(log n) rata-rata
+# Big-O delete  : O(log n) rata-rata
+# ============================================================
+
+from data_structures.bst import BSTKatalog
+from data_model import Buku, STATUS
+
+
+# label status untuk ditampilkan CLI
+LABEL_STATUS = {
+    STATUS['TERSEDIA']: 'TERSEDIA',
+    STATUS['DIPINJAM']: 'DIPINJAM',
+    STATUS['DIPESAN'] : 'DIPESAN',
+}
+
+
+class ManajerKatalog:
+    """
+    Lapisan bisnis di atas BSTKatalog.
+    Menerima panggilan dari CLI (modul_6) dan berkoordinasi
+    dengan ManajerRiwayat (modul_2) dan ManajerAntrian (modul_1).
+    """
+
+    def __init__(self):
+        self._bst = BSTKatalog()
+
+    # ----------------------------------------------------------
+    # muat_koleksi — insert semua buku dari generate_koleksi
+    # Big-O Waktu : O(n log n) rata-rata — n kali insert O(log n)
+    # Big-O Ruang : O(n)
+    # ----------------------------------------------------------
+    def muat_koleksi(self, daftar_buku: list[Buku]):
+        """Dipanggil sekali di main() saat startup."""
+        for buku in daftar_buku:
+            self._bst.insert(buku)   # O(log n)
+            
+    # ----------------------------------------------------------
+    # cari_buku — cari satu buku berdasarkan ISBN
+    # Big-O Waktu : O(log n) rata-rata
+    # ----------------------------------------------------------
+    def cari_buku(self, isbn: str) -> dict:
+        """
+        Cari buku di BST. Kembalikan dict info buku atau pesan error.
+        Dipanggil oleh CLI perintah CARI_BUKU <isbn>.
+        """
+        buku = self._bst.search(isbn)   # O(log n)
+        if buku is None:
+            return {
+                'berhasil': False,
+                'pesan'   : f'[KATALOG] Buku {isbn} tidak ditemukan.',
+                'big_o'   : 'O(log n) BST search',
+            }
+        return {
+            'berhasil': True,
+            'buku'    : buku,
+            'status'  : LABEL_STATUS.get(buku.status, '?'),
+            'pesan'   : self._format_buku(buku),
+            'big_o'   : 'O(log n) BST search',
+        }
+    # ----------------------------------------------------------
+    # pinjam — proses peminjaman buku oleh anggota
+    # Big-O Waktu : O(log n) search + O(log n) update = O(log n)
+    # ----------------------------------------------------------
+    def pinjam(self, isbn: str, nim: str,
+            manajer_riwayat, durasi: int = 14) -> dict:
+        """
+        Syarat: buku harus berstatus TERSEDIA.
+        Jika berhasil, status diubah ke DIPINJAM dan transaksi dicatat.
+        Jika sedang DIPINJAM/DIPESAN, sarankan pesan via modul_1.
+        """
+        buku = self._bst.search(isbn)   # O(log n)
+
+        if buku is None:
+            return {
+                'berhasil': False,
+                'pesan'   : f'[PINJAM] Buku {isbn} tidak ditemukan di katalog.',
+                'big_o'   : 'O(log n) BST search',
+            }
+
+        if buku.status != STATUS['TERSEDIA']:
+            label = LABEL_STATUS.get(buku.status, '?')
+            return {
+                'berhasil': False,
+                'pesan'   : (f'[PINJAM] Buku {isbn} sedang {label}. '
+                            f'Gunakan PESAN {nim} {isbn} untuk mengantri.'),
+                'big_o'   : 'O(log n) BST search',
+            }
+
+        # ubah status ke DIPINJAM
+        self._bst.update_status(isbn, STATUS['DIPINJAM'])   # O(log n)
+
+        # catat ke stack riwayat — O(1)
+        tx_id = manajer_riwayat.catat('PINJAM', nim, isbn, durasi)
+
+        return {
+            'berhasil': True,
+            'tx_id'   : tx_id,
+            'pesan'   : (f'[PINJAM] Berhasil. {nim} meminjam {isbn} '
+                        f'selama {durasi} hari. TX-{tx_id:04d}'),
+            'big_o'   : 'O(log n) BST search + update',
+        }
+
+    # ----------------------------------------------------------
+    # kembalikan — proses pengembalian buku
+    # Big-O Waktu : O(log n)
+    # ----------------------------------------------------------
+    def kembalikan(self, isbn: str, manajer_riwayat,
+                manajer_antrian) -> dict:
+        """
+        Kembalikan buku ke perpustakaan.
+        Jika ada antrian, status menjadi DIPESAN dan anggota pertama
+        di antrian diprioritaskan. Jika tidak ada antrian, TERSEDIA.
+        Koordinasi dengan modul_1 (antrian) dan modul_2 (riwayat).
+        """
+        buku = self._bst.search(isbn)   # O(log n)
+
+        if buku is None:
+            return {
+                'berhasil': False,
+                'pesan'   : f'[KEMBALIKAN] Buku {isbn} tidak ditemukan.',
+                'big_o'   : 'O(log n) BST search',
+            }
+
+        if buku.status == STATUS['TERSEDIA']:
+            return {
+                'berhasil': False,
+                'pesan'   : f'[KEMBALIKAN] Buku {isbn} sudah berstatus TERSEDIA.',
+                'big_o'   : 'O(log n) BST search',
+            }
+
+        # cek antrian — O(1) dequeue
+        pemesan_berikut = manajer_antrian.proses_pengembalian(isbn)
+
+        if pemesan_berikut:
+            # ada anggota mengantri -> status DIPESAN
+            self._bst.update_status(isbn, STATUS['DIPESAN'])   # O(log n)
+            tx_id = manajer_riwayat.catat('KEMBALIKAN', pemesan_berikut, isbn)
+            pesan = (f'[KEMBALIKAN] {isbn} dikembalikan. '
+                    f'Langsung dipesan oleh {pemesan_berikut}. TX-{tx_id:04d}')
+        else:
+            # tidak ada antrian -> TERSEDIA
+            self._bst.update_status(isbn, STATUS['TERSEDIA'])   # O(log n)
+            tx_id = manajer_riwayat.catat('KEMBALIKAN', '-', isbn)
+            pesan = f'[KEMBALIKAN] {isbn} berhasil dikembalikan. Status: TERSEDIA. TX-{tx_id:04d}'
+
+        return {
+            'berhasil'        : True,
+            'tx_id'           : tx_id,
+            'pemesan_berikut' : pemesan_berikut,
+            'pesan'           : pesan,
+            'big_o'           : 'O(log n) BST search + update, O(1) dequeue antrian',
+        }
+
+    # ----------------------------------------------------------
+    # undo_pinjam — balik efek transaksi PINJAM (dipanggil modul undo)
+    # Big-O Waktu : O(log n)
+    # ----------------------------------------------------------
+    def undo_pinjam(self, isbn: str) -> bool:
+        """
+        Kembalikan status buku ke TERSEDIA setelah undo PINJAM.
+        Dipanggil oleh handler BATALKAN_TERAKHIR di main().
+        """
+        return self._bst.update_status(isbn, STATUS['TERSEDIA'])   # O(log n)
+
+    # ----------------------------------------------------------
+    # undo_kembalikan — balik efek transaksi KEMBALIKAN
+    # Big-O Waktu : O(log n)
+    # ----------------------------------------------------------
+    def undo_kembalikan(self, isbn: str) -> bool:
+        """
+        Kembalikan status buku ke DIPINJAM setelah undo KEMBALIKAN.
+        """
+        return self._bst.update_status(isbn, STATUS['DIPINJAM'])   # O(log n)
+
+    # ----------------------------------------------------------
+    # katalog_semua — tampilkan semua buku terurut ISBN (inorder)
+    # Big-O Waktu : O(n)
+    # ----------------------------------------------------------
+    def katalog_semua(self) -> list[Buku]:
+        """Kembalikan list Buku terurut ISBN untuk perintah KATALOG."""
+        return self._bst.inorder()   # O(n)
+
+    # ----------------------------------------------------------
+    # hapus_buku — hapus buku dari katalog (buku rusak/hilang)
+    # Big-O Waktu : O(log n)
+    # ----------------------------------------------------------
+    def hapus_buku(self, isbn: str) -> dict:
+        berhasil = self._bst.delete(isbn)   # O(log n)
+        if berhasil:
+            return {
+                'berhasil': True,
+                'pesan'   : f'[KATALOG] Buku {isbn} dihapus dari katalog.',
+                'big_o'   : 'O(log n) BST delete',
+            }
+        return {
+            'berhasil': False,
+            'pesan'   : f'[KATALOG] Buku {isbn} tidak ditemukan.',
+            'big_o'   : 'O(log n) BST delete',
+        }
+
+    # ----------------------------------------------------------
+    # info_bst — statistik BST untuk laporan eksperimen
+    # Big-O Waktu : O(n)
+    # ----------------------------------------------------------
+    def info_bst(self) -> dict:
+        return {
+            'jumlah_buku': len(self._bst),
+            'tinggi'     : self._bst.hitung_tinggi(),
+        }
+
+    # ----------------------------------------------------------
+    # _format_buku — helper string satu buku untuk CLI
+    # ----------------------------------------------------------
+    @staticmethod
+    def _format_buku(buku: Buku) -> str:
+        label = LABEL_STATUS.get(buku.status, '?')
+        return (f"  ISBN     : {buku.isbn}\n"
+                f"  Judul    : {buku.judul}\n"
+                f"  Pengarang: {buku.pengarang}\n"
+                f"  Kategori : {buku.kategori}\n"
+                f"  Status   : {label}")

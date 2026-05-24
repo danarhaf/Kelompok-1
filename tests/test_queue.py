@@ -1,0 +1,195 @@
+# ============================================================
+# test_queue.py
+# Unit test untuk Queue berbasis Linked List (queue_ll.py)
+# Jalankan: pytest tests/test_queue.py -v
+# ============================================================
+
+import sys
+import os
+
+# supaya bisa import dari src/ tanpa install package
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+
+from data_structures.queue import Queue
+
+
+# ── helper ────────────────────────────────────────────────────
+def buat_queue(*items):
+    """Buat Queue dan langsung isi dengan items yang diberikan."""
+    q = Queue()
+    for item in items:
+        q.enqueue(item)
+    return q
+
+
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 1 — kondisi awal / state kosong
+# ══════════════════════════════════════════════════════════════
+
+def test_queue_baru_pasti_kosong():
+    # Queue yang baru dibuat harus langsung kosong
+    q = Queue()
+    assert q.is_empty() is True
+    assert len(q) == 0
+
+
+def test_dequeue_dari_queue_kosong_kembalikan_none():
+    # Dequeue dari queue kosong tidak boleh error, cukup kembalikan None
+    q = Queue()
+    assert q.dequeue() is None
+
+
+def test_peek_queue_kosong_kembalikan_none():
+    q = Queue()
+    assert q.peek() is None
+
+
+
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 2 — operasi dasar enqueue & dequeue
+# ══════════════════════════════════════════════════════════════
+
+def test_satu_enqueue_lalu_dequeue():
+    # enqueue satu elemen, dequeue harus mengembalikan elemen itu
+    q = Queue()
+    q.enqueue('NIM-001')
+    assert q.dequeue() == 'NIM-001'
+
+
+def test_urutan_fifo_terjaga():
+    # Yang pertama masuk harus pertama keluar
+    # enqueue: A, B, C  ->  dequeue harus: A, B, C
+    q = buat_queue('A', 'B', 'C')
+    assert q.dequeue() == 'A'
+    assert q.dequeue() == 'B'
+    assert q.dequeue() == 'C'
+
+def test_size_bertambah_setiap_enqueue():
+    q = Queue()
+    for i in range(5):
+        q.enqueue(i)
+        assert len(q) == i + 1   # ukuran harus naik tepat 1 setiap kali
+
+
+def test_size_berkurang_setiap_dequeue():
+    q = buat_queue(10, 20, 30)
+    for sisa in [2, 1, 0]:
+        q.dequeue()
+        assert len(q) == sisa
+
+
+def test_queue_kosong_setelah_semua_didequeue():
+    q = buat_queue('x', 'y')
+    q.dequeue()
+    q.dequeue()
+    assert q.is_empty() is True
+    assert len(q) == 0
+
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 3 — peek (tidak merusak antrian)
+# ══════════════════════════════════════════════════════════════
+
+def test_peek_tidak_menghapus_elemen():
+    q = buat_queue('NIM-010', 'NIM-011')
+    hasil_peek = q.peek()
+    assert hasil_peek == 'NIM-010'
+    # setelah peek, ukuran tidak boleh berubah
+    assert len(q) == 2
+
+
+def test_peek_menunjuk_head_bukan_tail():
+    q = buat_queue(1, 2, 3)
+    # peek harus selalu mengembalikan elemen paling depan
+    assert q.peek() == 1
+    q.dequeue()
+    assert q.peek() == 2
+
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 4 — tampilkan_antrian
+# ══════════════════════════════════════════════════════════════
+
+def test_tampilkan_antrian_urutan_benar():
+    q = buat_queue('A', 'B', 'C', 'D')
+    assert q.tampilkan_antrian() == ['A', 'B', 'C', 'D']
+
+
+def test_tampilkan_antrian_kosong_kembalikan_list_kosong():
+    q = Queue()
+    assert q.tampilkan_antrian() == []
+
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 5 — kasus edge & skenario realistis perpustakaan
+# ══════════════════════════════════════════════════════════════
+
+def test_enqueue_setelah_queue_sempat_kosong():
+    # Queue boleh diisi lagi setelah dikosongkan sepenuhnya
+    # Ini penting: pointer tail harus reset dengan benar saat kosong
+    q = buat_queue('NIM-001')
+    q.dequeue()                # queue jadi kosong
+    q.enqueue('NIM-002')      # isi lagi
+    assert q.peek() == 'NIM-002'
+    assert len(q) == 1
+
+
+def test_enqueue_banyak_elemen_sekaligus():
+    # simulasi 50 anggota antri untuk buku populer
+    q = Queue()
+    for i in range(1, 51):
+        q.enqueue(f'NIM-{i:03d}')
+    assert len(q) == 50
+    assert q.peek() == 'NIM-001'   # yang pertama antri harus di depan
+
+def test_dequeue_sampai_habis_lalu_cek_tail_reset():
+    # Setelah dequeue semua, enqueue lagi harus tetap benar
+    q = buat_queue('X', 'Y', 'Z')
+    q.dequeue()
+    q.dequeue()
+    q.dequeue()
+    # pastikan tail juga sudah None (bukan masih menunjuk node lama)
+    q.enqueue('NEW')
+    assert q.peek() == 'NEW'
+    assert len(q) == 1
+
+
+def test_antrian_per_isbn_independen():
+    # Setiap ISBN punya queue sendiri, tidak saling mengganggu
+    antrian = {
+        'ISBN-0001': buat_queue('NIM-001', 'NIM-002'),
+        'ISBN-0002': buat_queue('NIM-003'),
+    }
+    # dequeue dari ISBN-0001 tidak boleh mempengaruhi ISBN-0002
+    antrian['ISBN-0001'].dequeue()
+    assert len(antrian['ISBN-0001']) == 1
+    assert len(antrian['ISBN-0002']) == 1
+
+
+def test_tipe_data_beragam_bisa_masuk_queue():
+    # Queue tidak spesifik tipe — string, int, dict semua boleh
+    q = Queue()
+    q.enqueue('NIM-001')
+    q.enqueue(42)
+    q.enqueue({'isbn': 'ISBN-0001', 'nim': 'NIM-005'})
+    assert len(q) == 3
+    assert q.dequeue() == 'NIM-001'
+
+# ══════════════════════════════════════════════════════════════
+# KELOMPOK 6 — skala besar (beban 500 operasi)
+# ══════════════════════════════════════════════════════════════
+
+def test_500_operasi_campuran():
+    """
+    Tes beban: 500 enqueue lalu 500 dequeue.
+    Memastikan tidak ada memory leak atau pointer rusak pada skala besar.
+    Big-O total: O(n) — setiap operasi O(1)
+    """
+    q = Queue()
+    n = 500
+    for i in range(n):
+        q.enqueue(i)
+    assert len(q) == n
+
+    for i in range(n):
+        nilai = q.dequeue()
+        assert nilai == i   # urutan FIFO harus terjaga
+
+    assert q.is_empty() is True
