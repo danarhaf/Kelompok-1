@@ -1,0 +1,973 @@
+================================================================
+LOG PENGGUNAAN AI ASSISTANT — GABUNGAN SELURUH ANGGOTA
+Proyek      : Smart Library Management & Recommendation System
+Mata Kuliah : ELT60213 Algoritma dan Struktur Data
+Kelompok    : [Nomor Kelompok]
+Semester    : 2 | TA 2025/2026
+Tool AI     : Claude Sonnet 4.6 (claude.ai) &
+              GPT-5.5 (chat.openai.com)
+================================================================
+
+FORMAT LOG:
+  [Claude Sonnet 4.6] → review kode, analisis Big-O, debugging mendalam
+  [GPT-5.5]           → pertanyaan konsep, penjelasan class/fungsi, error runtime
+
+================================================================
+ANGGOTA 1 — ITQON EL FIKRY FAUSTA | Modul: BST Katalog Buku
+================================================================
+
+[SESI 1 — Pemahaman Konsep BST]
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Bisa jelasin konsep Binary Search Tree secara singkat?
+Terutama kenapa kuncinya harus unik dan bagaimana cara
+kerjanya buat pencarian data."
+
+RESPONS (ringkasan):
+BST adalah pohon biner di mana setiap node punya kunci unik.
+Node kiri selalu lebih kecil dari root, node kanan selalu
+lebih besar. Pencarian efisien karena di setiap langkah,
+setengah dari pohon bisa diabaikan — sehingga O(log n)
+untuk kasus rata-rata.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Kalau datanya dimasukkan dalam urutan terurut dari kecil
+ke besar, apa yang terjadi dengan bentuk pohonnya?"
+
+RESPONS (ringkasan):
+Jika data diinsert secara terurut, BST akan menjadi miring
+ke satu sisi (degenerate tree), sehingga tinggi pohon = n
+dan semua operasi menjadi O(n) bukan O(log n).
+Ini disebut worst-case BST.
+
+----------------------------------------------------------------
+
+[GPT-5.5]
+TANYA:
+"class BSTNode itu sebenernya buat apa ya? apa bedanya
+sama class BSTKatalog?"
+
+JAWAB (ringkasan):
+BSTNode adalah blueprint satu node dalam pohon — menyimpan
+data buku dan pointer ke anak kiri/kanan. BSTKatalog adalah
+manajer pohon secara keseluruhan yang menyimpan root dan
+menyediakan operasi insert, search, delete. Analogi:
+BSTNode = satu kotak, BSTKatalog = rak yang mengelola
+susunan semua kotak.
+
+----------------------------------------------------------------
+
+[SESI 2 — Implementasi BST]
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Aku mau implementasi BST untuk katalog buku. Kunci yang
+dipakai adalah ISBN dalam format string. Gimana cara insert
+rekursif yang benar? Dan bagaimana cara tracking jumlah
+node tanpa pakai len() bawaan Python?"
+
+RESPONS (ringkasan):
+Insert rekursif membandingkan ISBN secara leksikografis
+di setiap node. Untuk tracking jumlah node, digunakan
+counter _jumlah manual yang hanya naik saat node benar-benar
+baru dibuat (bukan saat update duplikat).
+
+----------------------------------------------------------------
+
+[GPT-5.5]
+TANYA:
+"fungsi _insert_rekursif itu dipanggil dari mana? kenapa
+ada underscore di depan namanya?"
+
+JAWAB (ringkasan):
+_insert_rekursif dipanggil dari dalam fungsi insert() —
+ini pola helper private. Underscore di depan nama fungsi
+adalah konvensi Python yang menandakan fungsi tersebut
+untuk pemakaian internal saja, tidak dimaksudkan dipanggil
+dari luar class secara langsung.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Gimana cara implementasi delete BST yang benar? Aku bingung
+handle kasus node dengan dua anak."
+
+RESPONS (ringkasan):
+Tiga kasus delete BST:
+1. Node daun: langsung hapus
+2. Satu anak: ganti node dengan anaknya
+3. Dua anak: cari inorder successor (node paling kiri
+   di subtree kanan), salin datanya ke node yang dihapus,
+   lalu hapus inorder successor dari subtree kanan.
+
+----------------------------------------------------------------
+
+[GPT-5.5]
+TANYA:
+"fungsi _cari_minimum itu gunanya apa di dalam delete BST?"
+
+JAWAB (ringkasan):
+_cari_minimum dipakai untuk menemukan inorder successor,
+yaitu node dengan nilai terkecil di subtree kanan node yang
+akan dihapus. Node ini dipakai sebagai pengganti node yang
+dihapus ketika node tersebut punya dua anak, agar urutan
+BST tetap terjaga setelah penghapusan.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Kenapa inorder traversal BST menghasilkan data terurut?
+Bisa jelasin urutannya?"
+
+RESPONS (ringkasan):
+Inorder mengunjungi node dengan urutan kiri -> root -> kanan.
+Karena semua node kiri lebih kecil dari root dan semua node
+kanan lebih besar, urutan kunjungan secara alami menghasilkan
+data dari terkecil ke terbesar.
+
+----------------------------------------------------------------
+
+[SESI 3 — Analisis Big-O BST]
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Kalau 80 buku disisipkan dengan urutan ISBN-0001 sampai
+ISBN-0080 secara berurutan, berapa tinggi tree yang
+terbentuk? Bandingkan dengan urutan acak."
+
+RESPONS (ringkasan):
+Insert berurutan menghasilkan pohon linear setinggi n=80
+(worst-case O(n)). Insert acak menghasilkan pohon dengan
+tinggi mendekati log2(80) sekitar 6-7 level. Ini dasar
+Pertanyaan Analisis no.1 di laporan.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Kapan BST tetap lebih unggul dibanding Hash Table meski
+Hash Table O(1) average untuk search?"
+
+RESPONS (ringkasan):
+BST unggul untuk: range query, data terurut otomatis via
+inorder, operasi predecessor/successor, dan tidak ada
+collision handling. Hash Table unggul hanya untuk point
+query O(1) average.
+
+----------------------------------------------------------------
+
+[SESI 4 — Debugging & Pertanyaan Lanjutan BST]
+
+[GPT-5.5]
+TANYA:
+"aku dapat error ini waktu jalanin test BST:
+AttributeError: 'NoneType' object has no attribute 'isbn'
+kira-kira di bagian mana ya?"
+
+JAWAB (ringkasan):
+Error ini terjadi karena fungsi search mengembalikan None
+(buku tidak ditemukan), tapi kode pemanggil langsung akses
+atributnya tanpa cek dulu. Fix: tambahkan pengecekan
+'if buku is None: return' sebelum mengakses buku.isbn
+atau atribut lainnya.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Aku dapat error RecursionError: maximum recursion depth
+exceeded saat insert 300 buku berurutan. Kenapa bisa terjadi
+dan gimana cara fixnya?"
+
+RESPONS (ringkasan):
+Error terjadi karena insert 300 buku secara berurutan membuat
+pohon miring setinggi 300 level. Setiap insert rekursif
+memanggil stack frame baru sampai Python kehabisan stack
+(default limit ~1000). Fix jangka pendek: sys.setrecursionlimit.
+Fix jangka panjang: implementasi iteratif atau AVL Tree.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Waktu aku coba delete root dari BST yang hanya punya satu
+node, hasilnya aneh. Kodinganku jadi error. Ini kenapa?"
+
+RESPONS (ringkasan):
+Saat delete root dengan satu node, fungsi mengembalikan None
+sebagai node baru. Tapi kalau pemanggil tidak mengupdate
+self._root = hasil, self._root masih menunjuk ke node lama.
+Fix: pastikan hasil return dari _delete_rekursif selalu
+di-assign kembali ke self._root.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Aku masih bingung soal kompleksitas ruang BST. Katanya
+O(log n) untuk call stack rekursif, tapi worst-case O(n).
+Kapan yang mana yang berlaku?"
+
+RESPONS (ringkasan):
+Kompleksitas ruang call stack mengikuti tinggi pohon.
+Pohon seimbang (insert acak) -> tinggi log n -> call stack O(log n).
+Pohon miring (insert terurut) -> tinggi n -> call stack O(n).
+Worst-case ruang dan waktu keduanya O(n) pada kondisi sama.
+
+================================================================
+ANGGOTA 2 — DANAR HAFIDZ A'ISY | Modul: Graph Rekomendasi Ko-pinjam
+================================================================
+
+[SESI 1 — Pemahaman Konsep Graf]
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Apa perbedaan representasi adjacency list vs adjacency
+matrix untuk graf? Mana yang lebih cocok untuk sistem
+rekomendasi buku?"
+
+RESPONS (ringkasan):
+Adjacency matrix: O(V2) ruang, O(1) cek edge, boros untuk
+sparse graph. Adjacency list: O(V+E) ruang, O(deg) cek edge,
+efisien untuk sparse graph. Untuk rekomendasi buku (sparse),
+adjacency list jauh lebih efisien.
+
+----------------------------------------------------------------
+
+[GPT-5.5]
+TANYA:
+"self.adj di GraphRekBuku itu isinya apa ya formatnya
+gimana?"
+
+JAWAB (ringkasan):
+self.adj adalah dictionary dengan format:
+{ isbn: [(isbn_tetangga, bobot), ...] }
+Contoh: {'ISBN-0001': [('ISBN-0002', 3), ('ISBN-0003', 1)]}
+Artinya ISBN-0001 pernah dipinjam bersama ISBN-0002
+sebanyak 3 kali dan bersama ISBN-0003 sebanyak 1 kali.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Gimana cara kerja BFS dan kenapa lebih cocok dari DFS
+untuk rekomendasi dengan batasan hop?"
+
+RESPONS (ringkasan):
+BFS menjelajah level per level sehingga mudah dibatasi
+dengan max_hop. DFS pergi sejauh mungkin ke satu jalur
+dulu sehingga sulit dikontrol batasannya. Untuk rekomendasi
+dengan batasan jarak 2 hop, BFS adalah pilihan tepat.
+
+----------------------------------------------------------------
+
+[SESI 2 — Implementasi Graph]
+
+[GPT-5.5]
+TANYA:
+"fungsi tambah_vertex di graph.py itu dipanggil kapan?
+aku ga nemu di mana dia dipanggil secara eksplisit"
+
+JAWAB (ringkasan):
+tambah_vertex dipanggil otomatis dari dalam add_copinjam.
+Setiap kali dua buku dicatat sebagai ko-pinjam, keduanya
+perlu terdaftar sebagai vertex dulu. Jadi tidak perlu
+memanggil tambah_vertex secara manual dari luar — cukup
+panggil add_copinjam dan vertex akan terdaftar sendiri
+jika belum ada.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Aku mau implementasi BFS untuk rekomendasi buku, tapi
+harus pakai Queue Linked List buatan sendiri, bukan
+collections.deque. Gimana caranya?"
+
+RESPONS (ringkasan):
+Queue Linked List diimport dari queue_ll.py. BFS standar
+menggunakan queue untuk menyimpan node yang akan dikunjungi,
+visited set untuk mencegah kunjungan ganda, dan counter
+hop untuk membatasi kedalaman pencarian.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Bagaimana cara update bobot edge jika dua buku yang sama
+dipinjam bersama lagi? Apakah perlu buat edge baru?"
+
+RESPONS (ringkasan):
+Tidak perlu buat edge baru. Scan adjacency list node tersebut
+(O(deg)), temukan entri pasangannya, dan naikkan bobotnya +1.
+Jika belum ada, baru tambahkan entry baru dengan bobot 1.
+
+----------------------------------------------------------------
+
+[SESI 3 — Analisis Big-O Graph]
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Kalau setiap buku rata-rata terhubung ke 4 buku lain
+dan koleksi ada 80 buku, berapa node yang dijelajahi
+BFS dari satu sumber dalam 2 hop?"
+
+RESPONS (ringkasan):
+Estimasi: hop 1 = 4 node, hop 2 = 4x4 = 16 node.
+Total sekitar 20 node dari 80 (25%). Karena visited set
+mencegah kunjungan ganda, angka bisa lebih kecil jika ada
+overlap. Big-O tetap O(V+E).
+
+----------------------------------------------------------------
+
+[SESI 4 — Debugging & Pertanyaan Lanjutan Graph]
+
+[GPT-5.5]
+TANYA:
+"waktu aku jalanin REKOMENDASI di CLI dapat error:
+TypeError: cannot unpack non-iterable NoneType object
+ini di bagian mana ya?"
+
+JAWAB (ringkasan):
+Error ini muncul saat hasil rekomendasikan() mengembalikan
+None alih-alih list kosong []. Cek bagian return di fungsi
+rekomendasikan — jika isbn tidak ada di graf, pastikan
+return [] bukan return None. CLI mencoba unpack tuple
+(isbn, bobot, hop) dari hasil, kalau None maka unpack gagal.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"BFS ku masuk infinite loop kalau ada siklus di graf.
+Misalnya A-B, B-C, C-A. Gimana cara fixnya?"
+
+RESPONS (ringkasan):
+Fix: gunakan visited set dan tambahkan node ke visited
+SEBELUM dimasukkan ke queue, bukan setelah dikeluarkan.
+Dengan begitu, saat C menemukan A lagi, A sudah ada di
+visited dan langsung diskip.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Gimana cara representasi bobot edge di adjacency list?
+Aku bingung struktur datanya harus seperti apa."
+
+RESPONS (ringkasan):
+Simpan adjacency list sebagai dict: isbn -> list of tuple
+(isbn_tetangga, bobot). Saat add_copinjam, scan list tuple
+untuk cari pasangan — jika ketemu naikkan bobot, jika tidak
+append tuple baru dengan bobot 1.
+
+================================================================
+ANGGOTA 3 & 4 — [Nama] | Modul: Queue & Stack
+================================================================
+
+[SESI 1 — Pemahaman Queue dan Stack]
+
+[GPT-5.5]
+TANYA:
+"class Queue di queue.py itu buat apa bedanya sama
+list biasa Python?"
+
+JAWAB (ringkasan):
+Queue ini mengimplementasikan antrian FIFO berbasis Linked
+List dari nol tanpa pakai list Python. Bedanya: Queue ini
+tidak bisa diakses by index, hanya bisa enqueue (tambah
+belakang) dan dequeue (ambil depan), keduanya O(1). List
+Python bisa diakses random tapi insert/delete di depan O(n)
+karena harus geser semua elemen.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Apa perbedaan mendasar Queue dan Stack? Dan kenapa keduanya
+lebih baik diimplementasi dengan Linked List daripada array
+untuk kasus perpustakaan ini?"
+
+RESPONS (ringkasan):
+Queue = FIFO, cocok untuk antrian. Stack = LIFO, cocok
+untuk undo. Linked List lebih baik karena tidak perlu
+pre-allocate ukuran, insert/delete di ujung selalu O(1)
+tanpa shift elemen, dan ukuran dinamis.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Kenapa Queue perlu pointer tail selain pointer head?
+Apa yang terjadi kalau tidak ada pointer tail?"
+
+RESPONS (ringkasan):
+Tanpa tail pointer, setiap enqueue harus traversal dari
+head ke node terakhir = O(n). Dengan tail pointer,
+enqueue langsung sambung ke tail = O(1).
+
+----------------------------------------------------------------
+
+[SESI 2 — Implementasi Queue]
+
+[GPT-5.5]
+TANYA:
+"_head dan _tail di Queue itu nunjuk ke apa pas Queue
+baru dibuat dan pas Queue kosong setelah di-dequeue semua?"
+
+JAWAB (ringkasan):
+Saat Queue baru dibuat: _head = None, _tail = None.
+Saat ada elemen: _head nunjuk ke node terdepan (pertama
+keluar), _tail nunjuk ke node paling belakang (terakhir
+masuk). Saat Queue jadi kosong lagi setelah semua
+di-dequeue: keduanya harus di-reset ke None. Kalau _tail
+tidak di-reset, enqueue berikutnya akan nyambung ke node
+lama yang sudah tidak valid.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Ada bug di Queue ku. Setelah dequeue semua elemen lalu
+enqueue lagi, program error. Kira-kira masalahnya di mana?"
+
+RESPONS (ringkasan):
+Pointer tail tidak direset ke None saat queue jadi kosong.
+Fix: tambahkan 'if self._head is None: self._tail = None'
+setelah menggeser head di dalam dequeue.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Bagaimana cara batalkan pesanan anggota dari tengah antrian?
+Kan Queue tidak support random delete."
+
+RESPONS (ringkasan):
+Rebuild: ambil semua elemen ke list sementara O(k), filter
+elemen yang dibatalkan, lalu bangun ulang Queue baru tanpa
+elemen tersebut. Big-O: O(k).
+
+----------------------------------------------------------------
+
+[SESI 3 — Implementasi Stack]
+
+[GPT-5.5]
+TANYA:
+"self._top di Stack itu selalu nunjuk ke node yang mana?
+apa berubah setiap kali push dan pop?"
+
+JAWAB (ringkasan):
+Ya, _top selalu berubah. Saat push, node baru dibuat dan
+_top digeser ke node baru tersebut. Saat pop, _top digeser
+ke node di bawahnya. Jadi _top selalu menunjuk ke node
+paling atas tumpukan — node yang paling terakhir di-push
+dan akan paling pertama di-pop.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Gimana cara implementasi fitur UNDO yang benar menggunakan
+Stack? Apa saja yang perlu disimpan di tiap node Stack?"
+
+RESPONS (ringkasan):
+Dict di Stack berisi: tx_id, aksi, nim, isbn, waktu, durasi.
+Saat UNDO: PINJAM -> kembalikan status BST ke TERSEDIA,
+KEMBALIKAN -> kembalikan status BST ke DIPINJAM,
+PESAN -> hapus nim dari antrian ISBN tersebut.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Kalau perpustakaan memproses 200 transaksi per hari, dalam
+sebulan Stack bisa sangat besar. Gimana cara handle ini?"
+
+RESPONS (ringkasan):
+Strategi archiving: setelah Stack mencapai batas N elemen,
+N elemen terlama dipindah ke struktur lain. Stack hanya
+menyimpan transaksi terbaru yang relevan untuk UNDO.
+Big-O archiving: O(n) traversal seluruh Stack sekali.
+
+----------------------------------------------------------------
+
+[SESI 4 — Debugging & Pertanyaan Lanjutan Queue & Stack]
+
+[GPT-5.5]
+TANYA:
+"aku dapat error waktu jalanin BATALKAN_TERAKHIR:
+KeyError: 'aksi'
+ini maksudnya apa?"
+
+JAWAB (ringkasan):
+KeyError: 'aksi' berarti dict transaksi yang di-pop dari
+Stack tidak punya key 'aksi'. Kemungkinan: saat catat()
+di ManajerRiwayat membentuk dict transaksi, key 'aksi'
+tidak ikut dimasukkan atau nama key-nya tidak konsisten
+(misal 'action' bukan 'aksi'). Cek format dict di fungsi
+catat() dan pastikan konsisten dengan yang diakses di
+handler BATALKAN_TERAKHIR.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Aku bingung kenapa peek() di Stack ku mengembalikan None
+padahal Stack tidak kosong. Aku sudah push beberapa elemen."
+
+RESPONS (ringkasan):
+Kemungkinan besar self._top tidak diupdate dengan benar
+saat push. Cek apakah baru.next = self._top diletakkan
+SEBELUM self._top = baru. Jika urutan terbalik, node baru
+justru menunjuk ke dirinya sendiri dan peek tidak benar.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Fungsi tampilkan_stack() ku terasa lambat kalau Stack
+sudah besar. Ini wajar atau ada yang salah?"
+
+RESPONS (ringkasan):
+Wajar, karena tampilkan_stack() harus traversal dari top
+ke node terbawah = O(n). Ini trade-off Linked List —
+akses random O(n). Yang penting push/pop tetap O(1).
+
+================================================================
+ANGGOTA 4 — ANARGYA KEANO ARIZONA MARICI | Modul: Sorting (Shell Sort & Merge Sort)
+================================================================
+
+[SESI 1 — Pemahaman Algoritma Sorting]
+
+[GPT-5.5]
+TANYA:
+"sorting.py itu dipanggil dari modul mana? dan fungsinya
+buat apa di sistem perpustakaan ini?"
+
+JAWAB (ringkasan):
+sorting.py diimport oleh modul_5.py (ManajerLaporan).
+Fungsinya untuk menyortir data laporan bulanan:
+shell_sort_durasi mengurutkan riwayat peminjaman berdasarkan
+durasi (terlama di atas) dan merge_sort_frekuensi
+mengurutkan frekuensi peminjaman per ISBN (terbanyak di atas).
+Hasilnya ditampilkan saat perintah LAPORAN_BULAN di CLI.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Apa perbedaan Shell Sort dan Merge Sort dari segi Big-O
+dan kapan masing-masing lebih unggul?"
+
+RESPONS (ringkasan):
+Shell Sort: ~O(n^1.5) dengan gap sequence Knuth, in-place,
+lebih cepat untuk data kecil atau hampir terurut.
+Merge Sort: O(n log n) guaranteed, stable sort, butuh
+memori tambahan O(n). Untuk laporan bulanan, keduanya
+bisa dibandingkan runtimenya secara empiris.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Kenapa Shell Sort lebih baik dari Bubble Sort atau
+Insertion Sort biasa untuk kasus ini?"
+
+RESPONS (ringkasan):
+Bubble Sort dan Insertion Sort keduanya O(n2) worst-case.
+Shell Sort memperbaiki ini dengan membandingkan elemen
+yang jauh terlebih dahulu. Gap sequence Knuth
+(1, 4, 13, 40...) memberikan kompleksitas ~O(n^1.5).
+
+----------------------------------------------------------------
+
+[SESI 2 — Implementasi Sorting pada Linked List]
+
+[GPT-5.5]
+TANYA:
+"nodes = [] di shell_sort_durasi itu buat apa? kenapa
+perlu dikumpulin dulu ke array?"
+
+JAWAB (ringkasan):
+nodes = [] mengumpulkan semua pointer node Linked List
+ke array sementara. Ini diperlukan karena Shell Sort butuh
+akses acak ke elemen ke-i dan ke-(i+gap), sedangkan Linked
+List tidak punya random access O(1). Dengan pointer di array,
+akses O(1) bisa dilakukan. Swap dilakukan pada data di dalam
+node bukan pointer-nya, sehingga struktur Linked List tetap.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Bagaimana cara implementasi Shell Sort pada Linked List?
+Kan Linked List tidak punya random access seperti array."
+
+RESPONS (ringkasan):
+Kumpulkan semua pointer node ke array temporary O(n),
+lakukan Shell Sort pada array dengan swap data (bukan pointer),
+hasilnya otomatis mencerminkan urutan di Linked List.
+Struktur pointer Linked List tidak diubah sama sekali.
+
+----------------------------------------------------------------
+
+[GPT-5.5]
+TANYA:
+"dummy = LLNode di _merge_descending itu gunanya apa?
+kenapa harus pakai node dummy?"
+
+JAWAB (ringkasan):
+Node dummy (sentinel) dipakai sebagai titik awal hasil merge
+sementara. Tanpanya, kita perlu if-else khusus untuk
+menentukan head hasil merge. Dengan dummy, kita selalu
+sambungkan ke dummy.next dan di akhir return dummy.next
+untuk melewati dummy itu sendiri. Teknik umum untuk
+menyederhanakan logika merge pada Linked List.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Gimana cara implementasi Merge Sort pada Linked List
+tanpa mengconvert ke array Python dulu?"
+
+RESPONS (ringkasan):
+Murni dengan pointer manipulation:
+1. Split: slow/fast pointer cari tengah lalu putus jadi dua
+2. Rekursif sort dua bagian
+3. Merge: gabung dua list terurut dengan sentinel node
+Tidak perlu convert ke array sama sekali.
+
+----------------------------------------------------------------
+
+[SESI 3 — Debugging & Pertanyaan Lanjutan Sorting]
+
+[GPT-5.5]
+TANYA:
+"waktu jalanin test sorting dapat error:
+AssertionError: assert [14, 14, 7] == [21, 14, 7]
+berarti hasil sortingnya salah ya? bisa kenapa?"
+
+JAWAB (ringkasan):
+Ya, urutan descending tidak benar. Kemungkinan di Shell Sort:
+kondisi perbandingan salah arah. Cek baris while di Shell Sort:
+seharusnya 'nodes[j-gap].data.get(durasi, 0) < temp_data'
+(tanda lebih kecil untuk descending). Kalau tanda-nya dibalik
+menjadi > maka hasilnya ascending bukan descending.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Merge Sort ku kadang hasilnya benar, kadang salah. Tidak
+konsisten. Aku sudah cek logika merge-nya tapi kelihatannya
+bener. Ini bisa disebabkan apa?"
+
+RESPONS (ringkasan):
+Kemungkinan masalah ada di _split_tengah. Jika slow.next
+tidak di-set ke None setelah split, kedua bagian masih
+terhubung. Pastikan slow.next = None setelah menemukan
+tengah untuk benar-benar memutus dua bagian.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Kenapa hasil benchmark Shell Sort kadang lebih cepat dari
+Merge Sort padahal Big-O Merge Sort lebih baik?"
+
+RESPONS (ringkasan):
+Big-O mengabaikan konstanta. Shell Sort in-place tanpa
+overhead rekursif. Untuk n kecil, konstanta Shell Sort
+yang kecil bisa mengalahkan keunggulan asimptotik Merge Sort.
+Ini wajar dan mendukung analisis di laporan.
+
+================================================================
+ANGGOTA 5 — ITQON EL FIKRY FAUSTA | Modul: CLI & Integrasi
+================================================================
+
+[SESI 1 — Perancangan CLI]
+
+[GPT-5.5]
+TANYA:
+"self._handler di CLI itu isinya apa dan cara kerjanya
+gimana waktu user ketik perintah?"
+
+JAWAB (ringkasan):
+self._handler adalah dictionary yang memetakan string
+perintah ke fungsi handler-nya. Contoh:
+{'CARI_BUKU': self._handle_cari_buku, 'PINJAM': ...}
+Waktu user ketik perintah, CLI split input jadi token,
+ambil token pertama sebagai perintah, lalu lookup di
+self._handler. Kalau ketemu, panggil fungsi handler-nya.
+Ini disebut dispatch table — lebih rapi dari if-elif panjang.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Bagaimana cara membuat CLI yang bersih untuk sistem
+perpustakaan ini? Supaya setiap perintah bisa ditangani
+secara modular tanpa banyak if-else bertumpuk."
+
+RESPONS (ringkasan):
+Pola dispatch table: buat dict yang memetakan string
+perintah ke method handler. Ini menghindari if-elif panjang,
+mudah ditambah perintah baru, dan setiap handler bisa
+ditest secara terpisah.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Gimana cara handle error di CLI supaya program tidak crash
+kalau user salah input perintah atau argumen kurang?"
+
+RESPONS (ringkasan):
+Gunakan try-except di level loop utama untuk menangkap
+semua exception tanpa menghentikan program. Setiap handler
+juga perlu validasi argumen sendiri dengan cek len(token).
+
+----------------------------------------------------------------
+
+[SESI 2 — Integrasi Antar Modul]
+
+[GPT-5.5]
+TANYA:
+"di main.py ada cli.jalankan() — fungsi itu ada di mana
+dan ngapain aja di dalamnya?"
+
+JAWAB (ringkasan):
+jalankan() ada di class CLI di modul_6.py. Isinya adalah
+loop utama program: cetak banner, lalu terus-menerus
+tunggu input user dengan input('>>'), parse perintah,
+cari handler di self._handler, dan panggil handler-nya.
+Loop baru berhenti kalau user ketik KELUAR atau ada
+KeyboardInterrupt (Ctrl+C).
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Gimana cara koordinasi antara modul-modul yang ada saat
+perintah KEMBALIKAN dijalankan? Banyak yang harus diupdate
+sekaligus."
+
+RESPONS (ringkasan):
+Urutan koordinasi KEMBALIKAN:
+1. ManajerKatalog.cari_buku -> cek buku ada dan DIPINJAM
+2. ManajerAntrian.proses_pengembalian -> dequeue pemesan
+3. ManajerKatalog.update status -> TERSEDIA atau DIPESAN
+4. ManajerRiwayat.catat -> push ke Stack
+5. ManajerRekomendasi.catat_kembalikan -> update sesi graf
+
+----------------------------------------------------------------
+
+[SESI 3 — Debugging & Fix]
+
+[GPT-5.5]
+TANYA:
+"dapat error ini waktu jalanin main.py:
+'ManajerRekomendasi' object has no attribute 'rekomendasikan'
+padahal fungsinya udah aku bikin di modul_4.py"
+
+JAWAB (ringkasan):
+Error ini berarti Python tidak menemukan method rekomendasikan
+di dalam class ManajerRekomendasi. Kemungkinan: indentasi
+fungsi rekomendasikan salah — tidak berada di dalam class
+(harus diindentasi 4 spasi ke kanan dari batas class).
+Cek modul_4.py dan pastikan def rekomendasikan(self, ...)
+ada di dalam blok class, bukan di level modul (rata kiri).
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Ada error ModuleNotFoundError saat jalanin test.
+generate_data.py menggunakan from src.data_model import Buku
+tapi error pas dijalankan dari root project."
+
+RESPONS (ringkasan):
+Prefix src. tidak valid saat file dijalankan dari dalam src/
+karena Python mencari modul src di dalam src. Fix: ganti jadi
+from data_model import Buku karena src/ sudah ada di sys.path.
+
+----------------------------------------------------------------
+
+[GPT-5.5]
+TANYA:
+"aku dapat error waktu pytest:
+ImportError: cannot import name 'Queue' from
+'data_structures.queue'
+padahal file queue_ll.py aku udah buat"
+
+JAWAB (ringkasan):
+Masalahnya nama file yang diimport tidak cocok. Di test_queue.py
+tertulis 'from data_structures.queue import Queue' tapi nama
+file aslinya queue_ll.py bukan queue.py. Fix: ganti import
+menjadi 'from data_structures.queue_ll import Queue' atau
+rename file-nya — pilih salah satu dan konsisten di semua file.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Di benchmark ada bug aneh, hasil sorting selalu pakai
+data dari iterasi terakhir loop, bukan data dari iterasi
+yang sesuai."
+
+RESPONS (ringkasan):
+Ini closure bug klasik Python. Fungsi yang didefinisikan
+di dalam loop menangkap variabel by reference bukan by value.
+Fix: tambahkan default argument, contoh:
+def uji_shell(tx_list=tx_list).
+
+----------------------------------------------------------------
+
+[SESI 4 — Pertanyaan Lanjutan CLI & Integrasi]
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Aku mau nampilin Big-O di setiap output CLI. Tapi aku
+bingung cara passing info Big-O dari modul ke CLI."
+
+RESPONS (ringkasan):
+Cara paling bersih: setiap fungsi modul mengembalikan dict
+yang sudah menyertakan key 'big_o'. CLI cukup print
+hasil['big_o'] tanpa perlu tahu implementasi dalamnya.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Program aku crash dengan KeyError saat user ketik perintah
+dengan huruf kecil, misalnya 'cari_buku' bukan 'CARI_BUKU'."
+
+RESPONS (ringkasan):
+Fix: tambahkan .upper() saat parse token perintah.
+Ubah perintah = token[0] menjadi perintah = token[0].upper().
+
+----------------------------------------------------------------
+
+[GPT-5.5]
+TANYA:
+"fungsi _cari_peminjam_aktif di CLI itu gunanya apa?
+dipanggil dari handler mana?"
+
+JAWAB (ringkasan):
+_cari_peminjam_aktif dipanggil dari _handle_kembalikan.
+Fungsinya mencari NIM anggota yang sedang meminjam suatu
+buku berdasarkan riwayat Stack — scan dari atas ke bawah,
+cari transaksi PINJAM untuk ISBN tersebut yang belum di-undo.
+Hasilnya dipakai untuk update sesi rekomendasi saat buku
+dikembalikan, agar graf ko-pinjam anggota tersebut ikut
+diperbarui.
+
+================================================================
+ANGGOTA SEMUA — Analisis Hasil Benchmark vs Teori
+================================================================
+
+[SESI BERSAMA — Diskusi Hasil Eksperimen Runtime]
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Kami sudah jalanin benchmark.py dan dapat hasil tabel
+runtime untuk N=20, N=80, N=300. Tapi bingung cara
+bacanya dan gimana cara menghubungkan ke teori Big-O
+yang sudah kami pelajari. Bisa bantu analisis?"
+
+RESPONS (ringkasan):
+Cara membaca tabel benchmark: lihat rasio waktu antar N.
+O(1) -> waktu hampir konstan. O(log n) -> naik sangat lambat.
+O(n) -> naik linear. O(n2) -> naik 4x saat N naik 2x.
+Bandingkan rasio empiris dengan prediksi teori.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"BST insert acak N=20=0.000089s, N=80=0.000412s,
+N=300=0.001823s. Sedangkan insert terurut N=20=0.000095s,
+N=80=0.000687s, N=300=0.004521s. Kenapa insert terurut
+jauh lebih lambat di N=300?"
+
+RESPONS (ringkasan):
+Bukti empiris worst-case BST. Insert acak: rasio 300/20 ≈ 20x
+untuk 15x lipat N -> mendekati O(n log n) total. Insert terurut:
+rasio ≈ 47x -> mendekati O(n2) total. Gap semakin lebar
+seiring N — persis prediksi teori O(log n) vs O(n) per operasi.
+
+----------------------------------------------------------------
+
+[GPT-5.5]
+TANYA:
+"kami bingung kenapa BFS graph hasilnya jauh lebih cepat
+dari yang kami ekspektasikan. N=300 cuma 0.000312s.
+apa ini normal?"
+
+JAWAB (ringkasan):
+Normal, karena graf yang dihasilkan sparse — tidak semua 300
+buku terhubung satu sama lain. E (jumlah edge) jauh lebih
+kecil dari V2 sehingga O(V+E) mendekati O(V) dalam kasus ini.
+BFS terasa hampir linear terhadap V. Jika jumlah transaksi
+ko-pinjam ditambah hingga setiap buku terhubung ke banyak
+buku lain, barulah BFS terasa lebih lambat secara proporsional.
+
+----------------------------------------------------------------
+
+[Claude Sonnet 4.6]
+PROMPT:
+"Hasil Shell Sort N=20=0.000021s, N=80=0.000142s,
+N=300=0.001876s. Merge Sort N=20=0.000018s, N=80=0.000098s,
+N=300=0.000934s. Kenapa Merge Sort lebih cepat di N=300
+tapi hampir sama di N=20?"
+
+RESPONS (ringkasan):
+Fenomena crossover point. Di N kecil, konstanta lebih dominan
+dari Big-O — Shell Sort in-place tanpa overhead rekursif bisa
+menang. Di N=300: 300^1.5 ≈ 5196 operasi vs 300xlog2(300) ≈ 2430
+— Merge Sort 2x lebih efisien, cocok dengan rasio empiris.
+
+----------------------------------------------------------------
+
+[GPT-5.5]
+TANYA:
+"gimana cara nulis hasil benchmark ini di laporan? apakah
+cukup copy paste tabel runtimenya saja?"
+
+JAWAB (ringkasan):
+Tidak cukup hanya tabel. Struktur analisis yang baik:
+(1) tampilkan tabel runtime, (2) hitung rasio waktu antar N,
+(3) bandingkan rasio empiris dengan prediksi teori Big-O,
+(4) jelaskan jika ada deviasi dan kenapa bisa terjadi,
+(5) tarik kesimpulan apakah implementasi terbukti efisien.
+Hindari hanya menulis "hasilnya sesuai teori" — tunjukkan
+angka rasionya secara eksplisit agar analisis terlihat kuat.
+
+================================================================
+CATATAN PENUTUP
+================================================================
+
+Seluruh output AI telah dibaca, dipahami, dan diverifikasi
+oleh masing-masing anggota sebelum diintegrasikan ke proyek.
+Setiap anggota tetap bertanggung jawab penuh untuk menjelaskan
+modul yang dikerjakannya saat sesi presentasi dan tanya jawab.
+
+Penggunaan AI dibagi sebagai berikut:
+- Claude Sonnet 4.6 : review kode mendalam, analisis Big-O,
+                      debugging kompleks, integrasi antar modul
+- GPT-5.5           : pertanyaan konsep, penjelasan class/fungsi,
+                      error runtime, pemahaman alur program
+
+Screenshot percakapan tersedia di folder AI_Log/screenshots/
+
+================================================================
+END OF LOG
+================================================================
